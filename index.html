@@ -73,7 +73,7 @@
             }
 
             // ایمیل فرضی برای سیستم اتومیشن واحدهای Supabase
-            const email = `${usernameInput}@sakhteman.app`;
+            const email = `${usernameInput}@sakhteman.local`;
 
             const { data, error } = await supabaseClient.auth.signInWithPassword({
                 email: email,
