@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سامانه مدیریت ساختمان</title>
-    <!-- Tailwind CSS برای طراحی زیبا و واکنش‌گرا -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- کتابخانه Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -17,86 +15,185 @@
 
     <div id="app" class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
         <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">سامانه مدیریت ساختمان</h1>
-        <p class="text-xs text-center text-slate-400 mb-6">جایگزین امن و راحت گروه‌های پیام‌رسان</p>
+        <p class="text-xs text-center text-slate-400 mb-6">اطلاعات واحدهای ساختمان</p>
 
-        <!-- فرم ورود -->
         <div id="login-section">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">نام کاربری واحد (مثلا unit1)</label>
-                    <input type="text" id="username" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="unit1">
+                    <label for="username" class="block text-sm font-medium text-slate-600 mb-1">
+                        نام کاربری واحد (مثلاً unit1)
+                    </label>
+                    <input type="text" id="username" autocomplete="username"
+                           class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                           placeholder="unit1">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-600 mb-1">رمز عبور</label>
-                    <input type="password" id="password" class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="******" value="123456">
+                    <label for="password" class="block text-sm font-medium text-slate-600 mb-1">
+                        رمز عبور
+                    </label>
+                    <input type="password" id="password" autocomplete="current-password"
+                           class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
                 </div>
-                <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition">ورود به سامانه</button>
+                <button id="login-button" onclick="login()"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition">
+                    ورود به سامانه
+                </button>
                 <p id="login-error" class="text-red-500 text-xs text-center mt-2"></p>
             </div>
         </div>
 
-        <!-- پنل اصلی بعد از ورود -->
         <div id="dashboard-section" class="hidden space-y-4">
             <div class="flex justify-between items-center bg-blue-50 p-3 rounded-xl border border-blue-100">
                 <div>
                     <span id="user-unit-badge" class="font-bold text-blue-800 text-sm"></span>
                     <p class="text-xs text-blue-600">خوش آمدید</p>
                 </div>
-                <button onclick="logout()" class="text-xs bg-white text-red-600 px-3 py-1.5 rounded-lg border border-red-200 hover:bg-red-50">خروج</button>
+                <button onclick="logout()"
+                        class="text-xs bg-white text-red-600 px-3 py-1.5 rounded-lg border border-red-200 hover:bg-red-50">
+                    خروج
+                </button>
             </div>
 
-            <div class="space-y-3">
-                <div class="p-4 bg-slate-50 rounded-xl border">
-                    <h3 class="font-bold text-sm mb-2 text-slate-700">وضعیت شارژ و اطلاعیه‌ها</h3>
-                    <p class="text-xs text-slate-500">به زودی بخش پرداخت شارژ و آپلود رسید فعال می‌شود.</p>
-                </div>
+            <div>
+                <h2 class="font-bold text-sm mb-3 text-slate-700">وضعیت شارژ</h2>
+                <p id="charges-message" class="text-sm text-slate-500"></p>
+                <div id="charges-list" class="space-y-3"></div>
             </div>
         </div>
     </div>
 
     <script>
-        // اطلاعات اتصال به Supabase شما
-       const SUPABASE_URL = 'https://virkprhykbvcawaryrvp.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj';
+        const SUPABASE_URL = 'https://virkprhykbvcawaryrvp.supabase.co';
+        const SUPABASE_ANON_KEY = 'GAPGPTMASKTOKENxi9gshjxxhX1X';
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const loginSection = document.getElementById('login-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const loginError = document.getElementById('login-error');
+        const chargesMessage = document.getElementById('charges-message');
+        const chargesList = document.getElementById('charges-list');
 
         async function login() {
-            const usernameInput = document.getElementById('username').value.trim();
+            const username = document.getElementById('username').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-            const errorEl = document.getElementById('login-error');
-            
-            errorEl.textContent = '';
-            if(!usernameInput) {
-                errorEl.textContent = 'لطفا نام کاربری را وارد کنید';
+            const button = document.getElementById('login-button');
+
+            loginError.textContent = '';
+
+            if (!/^unit([1-9]|1[0-6])$/.test(username) || !password) {
+                loginError.textContent = 'نام کاربری معتبر و رمز عبور را وارد کنید.';
                 return;
             }
 
-            // ایمیل فرضی برای سیستم اتومیشن واحدهای Supabase
-            const email = `${usernameInput}@sakhteman.local`;
+            button.disabled = true;
+            try {
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email: `${username}@sakhteman.local`,
+                    password: password
+                });
 
-            const { data, error } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+                if (error) {
+                    loginError.textContent = 'خطای ورود: ' + error.message;
+                    return;
+                }
 
-            if (error) {
-               if (error) {
-    errorEl.textContent = 'خطای سرور: ' + error.message;
-}
-
-            } else {
-                document.getElementById('login-section').classList.add('hidden');
-                document.getElementById('dashboard-section').classList.remove('hidden');
-                document.getElementById('user-unit-badge').textContent = usernameInput.toUpperCase();
+                await showDashboard(data.user);
+            } catch (error) {
+                loginError.textContent = 'خطای اتصال: ' + error.message;
+            } finally {
+                button.disabled = false;
             }
         }
 
-        function logout() {
-            supabaseClient.auth.signOut();
-            document.getElementById('dashboard-section').classList.add('hidden');
-            document.getElementById('login-section').classList.remove('hidden');
+        async function showDashboard(user) {
+            const match = /^unit([1-9]|1[0-6])@sakhteman[.]local$/.exec(user.email || '');
+
+            if (!match) {
+                loginError.textContent = 'ایمیل این حساب متعلق به واحدهای ساختمان نیست.';
+                return;
+            }
+
+            document.getElementById('user-unit-badge').textContent =
+                'واحد ' + Number(match[1]).toLocaleString('fa-IR');
+
+            loginSection.classList.add('hidden');
+            dashboardSection.classList.remove('hidden');
+            await loadCharges();
         }
+
+        async function loadCharges() {
+            chargesList.replaceChildren();
+            chargesMessage.textContent = 'در حال دریافت اطلاعات شارژ...';
+
+            const { data, error } = await supabaseClient
+                .from('charges')
+                .select('month_name, amount_due, amount_paid, is_paid, description')
+                .order('id', { ascending: false });
+
+            if (error) {
+                chargesMessage.textContent = 'خطا در دریافت شارژها: ' + error.message;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                chargesMessage.textContent = 'هنوز شارژی برای این واحد ثبت نشده است.';
+                return;
+            }
+
+            chargesMessage.textContent = '';
+            for (const charge of data) {
+                const item = document.createElement('div');
+                item.className = 'p-4 bg-slate-50 rounded-xl border space-y-1 text-sm';
+
+                const title = document.createElement('h3');
+                title.className = 'font-bold text-slate-700';
+                title.textContent = charge.month_name;
+
+                const due = document.createElement('p');
+                due.textContent = 'مبلغ شارژ: ' + Number(charge.amount_due).toLocaleString('fa-IR');
+
+                const paid = document.createElement('p');
+                paid.textContent = 'مبلغ پرداخت‌شده: ' + Number(charge.amount_paid || 0).toLocaleString('fa-IR');
+
+                const status = document.createElement('p');
+                status.className = charge.is_paid ? 'text-green-700' : 'text-red-600';
+                status.textContent = charge.is_paid ? 'وضعیت: پرداخت‌شده' : 'وضعیت: پرداخت‌نشده';
+
+                item.append(title, due, paid, status);
+
+                if (charge.description) {
+                    const description = document.createElement('p');
+                    description.className = 'text-slate-500';
+                    description.textContent = charge.description;
+                    item.append(description);
+                }
+
+                chargesList.append(item);
+            }
+        }
+
+        async function logout() {
+            const { error } = await supabaseClient.auth.signOut();
+
+            if (error) {
+                chargesMessage.textContent = 'خطا در خروج: ' + error.message;
+                return;
+            }
+
+            dashboardSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+            chargesList.replaceChildren();
+            document.getElementById('password').value = '';
+        }
+
+        async function restoreSession() {
+            const { data: { user }, error } = await supabaseClient.auth.getUser();
+            if (!error && user) {
+                await showDashboard(user);
+            }
+        }
+
+        restoreSession();
     </script>
 </body>
 </html>
