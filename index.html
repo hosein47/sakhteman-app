@@ -81,7 +81,10 @@
             });
 
             if (error) {
-                errorEl.textContent = 'نام کاربری یا رمز عبور اشتباه است.';
+               if (error) {
+    errorEl.textContent = 'خطای سرور: ' + error.message;
+}
+
             } else {
                 document.getElementById('login-section').classList.add('hidden');
                 document.getElementById('dashboard-section').classList.remove('hidden');
