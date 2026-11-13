@@ -4,196 +4,401 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>سامانه مدیریت ساختمان</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Vazirmatn', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col items-center justify-center p-4">
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <div id="app" class="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-2">سامانه مدیریت ساختمان</h1>
-        <p class="text-xs text-center text-slate-400 mb-6">اطلاعات واحدهای ساختمان</p>
-
-        <div id="login-section">
-            <div class="space-y-4">
-                <div>
-                    <label for="username" class="block text-sm font-medium text-slate-600 mb-1">
-                        نام کاربری واحد (مثلاً unit1)
-                    </label>
-                    <input type="text" id="username" autocomplete="username"
-                           class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                           placeholder="unit1">
-                </div>
-                <div>
-                    <label for="password" class="block text-sm font-medium text-slate-600 mb-1">
-                        رمز عبور
-                    </label>
-                    <input type="password" id="password" autocomplete="current-password"
-                           class="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
-                </div>
-                <button id="login-button" onclick="login()"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-xl transition">
-                    ورود به سامانه
-                </button>
-                <p id="login-error" class="text-red-500 text-xs text-center mt-2"></p>
-            </div>
-        </div>
-
-        <div id="dashboard-section" class="hidden space-y-4">
-            <div class="flex justify-between items-center bg-blue-50 p-3 rounded-xl border border-blue-100">
-                <div>
-                    <span id="user-unit-badge" class="font-bold text-blue-800 text-sm"></span>
-                    <p class="text-xs text-blue-600">خوش آمدید</p>
-                </div>
-                <button onclick="logout()"
-                        class="text-xs bg-white text-red-600 px-3 py-1.5 rounded-lg border border-red-200 hover:bg-red-50">
+    <!-- نوار بالا (Header) -->
+    <header class="bg-indigo-700 text-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold flex items-center gap-2">
+                <span>🏢</span>
+                <span>سامانه ساختمان</span>
+            </h1>
+            <div id="user-badge" class="hidden items-center gap-3">
+                <span id="user-display" class="bg-indigo-800 text-indigo-100 text-sm px-3 py-1.5 rounded-full font-medium"></span>
+                <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white text-xs px-3 py-1.5 rounded-lg transition">
                     خروج
                 </button>
             </div>
+        </div>
+    </header>
 
-            <div>
-                <h2 class="font-bold text-sm mb-3 text-slate-700">وضعیت شارژ</h2>
-                <p id="charges-message" class="text-sm text-slate-500"></p>
-                <div id="charges-list" class="space-y-3"></div>
+    <!-- محتوای اصلی -->
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- فرم ورود -->
+        <div id="login-section" class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+            <h2 class="text-2xl font-bold text-center text-slate-800 mb-2">ورود به سامانه</h2>
+            <p class="text-sm text-center text-slate-500 mb-6">واحدها: مثلا unit1 | مدیر: admin</p>
+            
+            <div id="login-error" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl"></div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">نام کاربری</label>
+                    <input type="text" id="username" dir="ltr" placeholder="unit1 یا admin" required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-left">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">رمز عبور</label>
+                    <input type="password" id="password" dir="ltr" placeholder="••••••••" required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:outline-none text-left">
+                </div>
+                <button type="submit" id="login-btn"
+                    class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl shadow-md transition duration-200">
+                    ورود
+                </button>
+            </form>
+        </div>
+
+        <!-- بخش کاربر عادی (واحدها) -->
+        <div id="unit-section" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800" id="welcome-unit">خوش آمدید</h2>
+                    <p class="text-sm text-slate-500">لیست صورت‌حساب‌ها و شارژهای این واحد</p>
+                </div>
+                <button onclick="loadUnitCharges()" class="self-start md:self-auto text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1">
+                    🔄 به‌روزرسانی
+                </button>
+            </div>
+
+            <div id="charges-list" class="space-y-3">
+                <!-- کارت‌ها توسط جاوااسکریپت پر می‌شوند -->
             </div>
         </div>
-    </div>
+
+        <!-- بخش پنل مدیریت (Admin) -->
+        <div id="admin-section" class="hidden space-y-6">
+            <!-- خلاصه آمار -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="text-sm text-slate-500">کل مطالبات ثبت‌شده</p>
+                    <p id="stat-total" class="text-2xl font-bold text-slate-800 mt-1">۰ تومان</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="text-sm text-slate-500">مجموع وصول‌شده</p>
+                    <p id="stat-paid" class="text-2xl font-bold text-emerald-600 mt-1">۰ تومان</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <p class="text-sm text-slate-500">مانده وصول‌نشده</p>
+                    <p id="stat-unpaid" class="text-2xl font-bold text-amber-600 mt-1">۰ تومان</p>
+                </div>
+            </div>
+
+            <!-- فرم ایجاد شارژ ماهانه همگانی -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800 mb-1">➕ صدور شارژ برای تمام ۱۶ واحد</h3>
+                <p class="text-xs text-slate-500 mb-4">با این فرم همزمان برای تمام واحدها صورت‌حساب ماه جدید صادر می‌شود.</p>
+
+                <div id="batch-alert" class="hidden mb-4 p-3 rounded-xl text-sm"></div>
+
+                <form onsubmit="handleBatchCreate(event)" class="grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">نام ماه / دوره</label>
+                        <input type="text" id="batch-month" placeholder="مثلا: آذر ۱۴۰۳" required
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">مبلغ هر واحد (تومان)</label>
+                        <input type="number" id="batch-amount" placeholder="مثلا: 500000" required
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">توضیحات (اختیاری)</label>
+                        <input type="text" id="batch-desc" placeholder="شارژ عادی + نظافت"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <button type="submit" id="batch-btn"
+                            class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-xl text-sm transition">
+                            صدور همگانی
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- جدول لیست کل شارژها -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-slate-800">لیست تمام صورت‌حساب‌ها</h3>
+                    <button onclick="loadAdminCharges()" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1">
+                        🔄 به‌روزرسانی
+                    </button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 text-xs">
+                            <tr>
+                                <th class="p-3">واحد</th>
+                                <th class="p-3">دوره</th>
+                                <th class="p-3">مبلغ (تومان)</th>
+                                <th class="p-3">توضیحات</th>
+                                <th class="p-3">وضعیت پرداخت</th>
+                                <th class="p-3 text-center">عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body" class="divide-y divide-slate-100">
+                            <!-- ردیف‌ها با JS ساخته می‌شوند -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="text-center py-4 text-xs text-slate-400">
+        سامانه مدیریت داخلی ساختمان — نسخه ۱.۰
+    </footer>
 
     <script>
         const SUPABASE_URL = 'https://virkprhykbvcawaryrvp.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj';
+        const SUPABASE_ANON_KEY = 'GAPGPTMASKTOKENwlcg35dn6dlX0X';
 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const loginSection = document.getElementById('login-section');
-        const dashboardSection = document.getElementById('dashboard-section');
-        const loginError = document.getElementById('login-error');
-        const chargesMessage = document.getElementById('charges-message');
-        const chargesList = document.getElementById('charges-list');
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let currentUser = null;
 
-        async function login() {
-            const username = document.getElementById('username').value.trim().toLowerCase();
+        // فرمت ۳ رقم ۳ رقم اعداد
+        function formatNumber(num) {
+            return new Intl.NumberFormat('fa-IR').format(num || 0);
+        }
+
+        // ورود به سیستم
+        async function handleLogin(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('username').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-            const button = document.getElementById('login-button');
+            const errorEl = document.getElementById('login-error');
+            const btn = document.getElementById('login-btn');
 
-            loginError.textContent = '';
+            errorEl.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = 'در حال بررسی...';
 
-            if (!/^unit([1-9]|1[0-6])$/.test(username) || !password) {
-                loginError.textContent = 'نام کاربری معتبر و رمز عبور را وارد کنید.';
-                return;
-            }
+            const email = `${usernameInput}@sakhteman.local`;
 
-            button.disabled = true;
-            try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({
-                    email: `${username}@sakhteman.local`,
-                    password: password
-                });
+            const { data, error } = await client.auth.signInWithPassword({ email, password });
 
-                if (error) {
-                    loginError.textContent = 'خطای ورود: ' + error.message;
-                    return;
-                }
-
-                await showDashboard(data.user);
-            } catch (error) {
-                loginError.textContent = 'خطای اتصال: ' + error.message;
-            } finally {
-                button.disabled = false;
-            }
-        }
-
-        async function showDashboard(user) {
-            const match = /^unit([1-9]|1[0-6])@sakhteman[.]local$/.exec(user.email || '');
-
-            if (!match) {
-                loginError.textContent = 'ایمیل این حساب متعلق به واحدهای ساختمان نیست.';
-                return;
-            }
-
-            document.getElementById('user-unit-badge').textContent =
-                'واحد ' + Number(match[1]).toLocaleString('fa-IR');
-
-            loginSection.classList.add('hidden');
-            dashboardSection.classList.remove('hidden');
-            await loadCharges();
-        }
-
-        async function loadCharges() {
-            chargesList.replaceChildren();
-            chargesMessage.textContent = 'در حال دریافت اطلاعات شارژ...';
-
-            const { data, error } = await supabaseClient
-                .from('charges')
-                .select('month_name, amount_due, amount_paid, is_paid, description')
-                .order('id', { ascending: false });
+            btn.disabled = false;
+            btn.textContent = 'ورود';
 
             if (error) {
-                chargesMessage.textContent = 'خطا در دریافت شارژها: ' + error.message;
+                errorEl.textContent = 'نام کاربری یا رمز عبور اشتباه است.';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            currentUser = data.user;
+            initDashboard();
+        }
+
+        // بررسی اینکه آیا مدیر است یا واحد عادی
+        function isAdmin() {
+            return currentUser && currentUser.email === 'admin@sakhteman.local';
+        }
+
+        // هدایت به داشبورد مربوطه
+        function initDashboard() {
+            document.getElementById('login-section').classList.add('hidden');
+            const badge = document.getElementById('user-badge');
+            badge.classList.remove('hidden');
+            badge.classList.add('flex');
+
+            if (isAdmin()) {
+                document.getElementById('user-display').textContent = 'مدیر ساختمان';
+                document.getElementById('admin-section').classList.remove('hidden');
+                loadAdminCharges();
+            } else {
+                const unitName = currentUser.email.split('@')[0];
+                document.getElementById('user-display').textContent = unitName;
+                document.getElementById('welcome-unit').textContent = `خوش آمدید (${unitName})`;
+                document.getElementById('unit-section').classList.remove('hidden');
+                loadUnitCharges();
+            }
+        }
+
+        // خروج
+        async function logout() {
+            await client.auth.signOut();
+            currentUser = null;
+            document.getElementById('user-badge').classList.add('hidden');
+            document.getElementById('user-badge').classList.remove('flex');
+            document.getElementById('unit-section').classList.add('hidden');
+            document.getElementById('admin-section').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // بارگذاری شارژهای واحد عادی
+        async function loadUnitCharges() {
+            const listEl = document.getElementById('charges-list');
+            listEl.innerHTML = '<div class="text-center py-6 text-slate-400">در حال دریافت اطلاعات...</div>';
+
+            const { data, error } = await client
+                .from('charges')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                listEl.innerHTML = `<div class="p-4 bg-red-50 text-red-700 rounded-xl text-sm">خطا در بارگذاری: ${error.message}</div>`;
                 return;
             }
 
             if (!data || data.length === 0) {
-                chargesMessage.textContent = 'هنوز شارژی برای این واحد ثبت نشده است.';
+                listEl.innerHTML = '<div class="bg-white p-6 rounded-2xl text-center text-slate-500 border border-slate-200">هنوز صورت‌حسابی برای شما ثبت نشده است.</div>';
                 return;
             }
 
-            chargesMessage.textContent = '';
-            for (const charge of data) {
-                const item = document.createElement('div');
-                item.className = 'p-4 bg-slate-50 rounded-xl border space-y-1 text-sm';
-
-                const title = document.createElement('h3');
-                title.className = 'font-bold text-slate-700';
-                title.textContent = charge.month_name;
-
-                const due = document.createElement('p');
-                due.textContent = 'مبلغ شارژ: ' + Number(charge.amount_due).toLocaleString('fa-IR');
-
-                const paid = document.createElement('p');
-                paid.textContent = 'مبلغ پرداخت‌شده: ' + Number(charge.amount_paid || 0).toLocaleString('fa-IR');
-
-                const status = document.createElement('p');
-                status.className = charge.is_paid ? 'text-green-700' : 'text-red-600';
-                status.textContent = charge.is_paid ? 'وضعیت: پرداخت‌شده' : 'وضعیت: پرداخت‌نشده';
-
-                item.append(title, due, paid, status);
-
-                if (charge.description) {
-                    const description = document.createElement('p');
-                    description.className = 'text-slate-500';
-                    description.textContent = charge.description;
-                    item.append(description);
-                }
-
-                chargesList.append(item);
-            }
+            listEl.innerHTML = data.map(item => `
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-slate-800 text-lg">${item.month_name}</span>
+                            <span class="text-xs px-2.5 py-0.5 rounded-full ${item.is_paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                                ${item.is_paid ? 'پرداخت شده' : 'پرداخت نشده'}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">${item.description || 'بدون توضیحات'}</p>
+                    </div>
+                    <div class="text-left">
+                        <div class="text-lg font-bold ${item.is_paid ? 'text-emerald-600' : 'text-slate-800'}">
+                            ${formatNumber(item.amount_due)} تومان
+                        </div>
+                        ${item.is_paid ? `<span class="text-xs text-emerald-700">واریز شده: ${formatNumber(item.amount_paid)} تومان</span>` : ''}
+                    </div>
+                </div>
+            `).join('');
         }
 
-        async function logout() {
-            const { error } = await supabaseClient.auth.signOut();
+        // بارگذاری شارژها در پنل ادمین
+        async function loadAdminCharges() {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">در حال دریافت اطلاعات...</td></tr>';
+
+            const { data, error } = await client
+                .from('charges')
+                .select('*')
+                .order('created_at', { ascending: false });
 
             if (error) {
-                chargesMessage.textContent = 'خطا در خروج: ' + error.message;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-red-600">خطا: ${error.message}</td></tr>`;
                 return;
             }
 
-            dashboardSection.classList.add('hidden');
-            loginSection.classList.remove('hidden');
-            chargesList.replaceChildren();
-            document.getElementById('password').value = '';
-        }
-
-        async function restoreSession() {
-            const { data: { user }, error } = await supabaseClient.auth.getUser();
-            if (!error && user) {
-                await showDashboard(user);
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="p-4 text-center text-slate-400">هیچ رکوردی یافت نشد.</td></tr>';
+                return;
             }
+
+            // محاسبه آمار
+            let total = 0;
+            let paid = 0;
+            data.forEach(item => {
+                total += (item.amount_due || 0);
+                if (item.is_paid) paid += (item.amount_paid || item.amount_due || 0);
+            });
+            document.getElementById('stat-total').textContent = `${formatNumber(total)} تومان`;
+            document.getElementById('stat-paid').textContent = `${formatNumber(paid)} تومان`;
+            document.getElementById('stat-unpaid').textContent = `${formatNumber(total - paid)} تومان`;
+
+            // رندر جدول
+            tbody.innerHTML = data.map(item => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="p-3 font-semibold text-slate-800">${item.unit_number}</td>
+                    <td class="p-3 text-slate-700">${item.month_name}</td>
+                    <td class="p-3 font-medium">${formatNumber(item.amount_due)}</td>
+                    <td class="p-3 text-slate-500 text-xs">${item.description || '-'}</td>
+                    <td class="p-3">
+                        <span class="inline-block px-2.5 py-1 rounded-full text-xs font-medium ${item.is_paid ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                            ${item.is_paid ? 'پرداخت شده' : 'پرداخت نشده'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="togglePaymentStatus(${item.id}, ${item.is_paid}, ${item.amount_due})"
+                            class="text-xs px-3 py-1.5 rounded-lg border ${item.is_paid ? 'border-amber-300 text-amber-700 hover:bg-amber-50' : 'border-emerald-300 text-emerald-700 hover:bg-emerald-50'} transition">
+                            ${item.is_paid ? 'تغییر به پرداخت‌نشده' : 'تأیید پرداخت'}
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        restoreSession();
+        // تغییر وضعیت پرداخت توسط مدیر
+        async function togglePaymentStatus(id, currentStatus, amountDue) {
+            const nextStatus = !currentStatus;
+            const amountPaid = nextStatus ? amountDue : 0;
+
+            const { error } = await client
+                .from('charges')
+                .update({ is_paid: nextStatus, amount_paid: amountPaid })
+                .eq('id', id);
+
+            if (error) {
+                alert('خطا در به‌روزرسانی: ' + error.message);
+                return;
+            }
+
+            loadAdminCharges();
+        }
+
+        // صدور همگانی شارژ برای تمام ۱۶ واحد
+        async function handleBatchCreate(e) {
+            e.preventDefault();
+            const month = document.getElementById('batch-month').value.trim();
+            const amount = parseFloat(document.getElementById('batch-amount').value);
+            const desc = document.getElementById('batch-desc').value.trim();
+            const alertEl = document.getElementById('batch-alert');
+            const btn = document.getElementById('batch-btn');
+
+            alertEl.classList.add('hidden');
+            btn.disabled = true;
+            btn.textContent = 'در حال ثبت ۱۶ رکورد...';
+
+            // آماده‌سازی آرایه برای ۱۶ واحد
+            const rows = [];
+            for (let i = 1; i <= 16; i++) {
+                rows.push({
+                    unit_number: `unit${i}`,
+                    month_name: month,
+                    amount_due: amount,
+                    amount_paid: 0,
+                    is_paid: false,
+                    description: desc
+                });
+            }
+
+            const { error } = await client.from('charges').insert(rows);
+
+            btn.disabled = false;
+            btn.textContent = 'صدور همگانی';
+
+            if (error) {
+                alertEl.className = 'mb-4 p-3 rounded-xl text-sm bg-red-50 text-red-700 border border-red-200';
+                alertEl.textContent = 'خطا در ثبت گروهی: ' + error.message;
+                alertEl.classList.remove('hidden');
+                return;
+            }
+
+            alertEl.className = 'mb-4 p-3 rounded-xl text-sm bg-emerald-50 text-emerald-700 border border-emerald-200';
+            alertEl.textContent = `شارژ دوره «${month}» با موفقیت برای هر ۱۶ واحد صادر شد.`;
+            alertEl.classList.remove('hidden');
+
+            document.getElementById('batch-month').value = '';
+            document.getElementById('batch-amount').value = '';
+            document.getElementById('batch-desc').value = '';
+
+            loadAdminCharges();
+        }
     </script>
 </body>
 </html>
