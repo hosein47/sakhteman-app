@@ -17,60 +17,217 @@
             --danger: #dc2626;
             --warning: #d97706;
         }
-        
-<!-- دکمه تغییر رمز -->
-<button type="button" onclick="togglePasswordBox()" class="password-toggle-btn">
-    🔑 تغییر رمز عبور
-</button>
 
-<!-- کادر تغییر رمز (در ابتدا مخفی) -->
-<div class="password-box" id="password-box" style="display: none;">
-    <h3>تغییر رمز عبور</h3>
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
 
-    <input
-        type="password"
-        id="new-password"
-        placeholder="رمز عبور جدید"
-        minlength="6"
-    >
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
 
-    <input
-        type="password"
-        id="confirm-password"
-        placeholder="تکرار رمز عبور جدید"
-        minlength="6"
-    >
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
 
-    <button type="button" onclick="changePassword()">
-        ثبت رمز جدید
-    </button>
+        .hidden {
+            display: none !important;
+        }
 
-    <button type="button" onclick="togglePasswordBox()" class="cancel-btn">
-        بستن
-    </button>
-</div>
+        .form-group {
+            margin-bottom: 14px;
+        }
 
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        input[type="text"], input[type="password"], input[type="number"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--danger) !important;
+        }
+
+        .btn-danger:hover {
+            background-color: #b91c1c !important;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .top-bar-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* بخش کادر تغییر رمز */
         .password-toggle-btn {
-    margin: 10px 0;
-    padding: 8px 16px;
-    cursor: pointer;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #fff;
-}
+            background: #ffffff;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 7px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
 
-.cancel-btn {
-    margin-right: 8px;
-    background: #eee;
-}
+        .password-toggle-btn:hover {
+            background: #f1f5f9;
+        }
 
-        
+        .password-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .password-box h3 {
+            margin-top: 0;
+            font-size: 15px;
+        }
+
+        .password-box-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .password-box-form input {
+            max-width: 200px;
+        }
+
+        .btn-cancel {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-cancel:hover {
+            background-color: #cbd5e1;
+        }
+
+        /* آمار */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-box h4 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .stat-box p {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .stat-box.success p { color: var(--success); }
+        .stat-box.danger p { color: var(--danger); }
+
+        /* جدول */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: right;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-paid { background: #dcfce7; color: #15803d; }
+        .badge-review { background: #fef3c7; color: #b45309; }
+        .badge-unpaid { background: #fee2e2; color: #b91c1c; }
+
+        .receipt-link {
+            color: var(--primary);
+            text-decoration: underline;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- بخش لاگین -->
+    <!-- بخش ورود به سیستم -->
     <div id="login-section" class="card">
         <h2>ورود به سامانه ساختمان</h2>
         <form id="login-form">
@@ -86,30 +243,7 @@
             <p id="login-error" style="color: var(--danger); margin-top: 10px; font-size: 13px;"></p>
         </form>
     </div>
-<div class="password-box">
-    <h3>تغییر رمز عبور</h3>
 
-    <input
-        type="password"
-        id="new-password"
-        placeholder="رمز عبور جدید"
-        minlength="6"
-    >
-
-    <input
-        type="password"
-        id="confirm-password"
-        placeholder="تکرار رمز عبور جدید"
-        minlength="6"
-    >
-
-    <button type="button" onclick="changePassword()">
-        تغییر رمز عبور
-    </button>
-</div>
-
-
-    
     <!-- داشبورد اصلی پس از ورود -->
     <div id="dashboard-section" class="hidden">
         <div class="card top-bar">
@@ -117,7 +251,21 @@
                 <span style="font-weight: bold;">کاربر جاری: </span>
                 <span id="current-user-display"></span>
             </div>
-            <button id="logout-btn" class="btn-danger btn-sm">خروج از حساب</button>
+            <div class="top-bar-actions">
+                <button type="button" onclick="togglePasswordBox()" class="password-toggle-btn">🔑 تغییر رمز عبور</button>
+                <button id="logout-btn" class="btn-danger btn-sm">خروج از حساب</button>
+            </div>
+        </div>
+
+        <!-- کادر تاشوی تغییر رمز عبور (در حالت پیش‌فرض مخفی) -->
+        <div id="password-box" class="card password-box" style="display: none;">
+            <h3>تغییر رمز عبور حساب شما</h3>
+            <div class="password-box-form">
+                <input type="password" id="new-password" placeholder="رمز عبور جدید (حداقل ۶ کاراکتر)" minlength="6">
+                <input type="password" id="confirm-password" placeholder="تکرار رمز عبور جدید" minlength="6">
+                <button type="button" onclick="changePassword()">ثبت رمز جدید</button>
+                <button type="button" onclick="togglePasswordBox()" class="btn-cancel">انصراف</button>
+            </div>
         </div>
 
         <!-- پنل ادمین -->
@@ -208,20 +356,18 @@
 <script>
     // تنظیمات اتصال Supabase
     const SUPABASE_URL = "https://virkprhykbvcawaryrvp.supabase.co";
-    // کلید عمومی anon خود را در خط زیر قرار دهید (همان که ۲ حرف آخرش lj است)
-    const SUPABASE_ANON_KEY = "sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj";
+    const SUPABASE_ANON_KEY = "GAPGPTMASKTOKEN6wc1deb6essX0X";
 
     const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let currentUser = null;
     let currentCharges = [];
 
-    // فرمت‌بندی اعداد به ریال/تومان با جداکننده کاما
     function formatMoney(num) {
         return Number(num || 0).toLocaleString('fa-IR');
     }
 
-    // رویداد ورود به سیستم
+    // ورود به سیستم
     document.getElementById("login-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const userInput = document.getElementById("username").value.trim().toLowerCase();
@@ -240,7 +386,7 @@
         initApp();
     });
 
-    // بررسی ورود کاربر در شروع
+    // بررسی ورود و لود صفحه
     async function initApp() {
         const { data: { user } } = await db.auth.getUser();
         currentUser = user;
@@ -271,6 +417,43 @@
         await db.auth.signOut();
         window.location.reload();
     });
+
+    // باز/بستن کادر تغییر رمز عبور
+    function togglePasswordBox() {
+        const box = document.getElementById("password-box");
+        box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
+    }
+
+    // اجرای تغییر رمز عبور کاربر
+    async function changePassword() {
+        const GAPGPTMASKTOKEN6wc1deb6essX1X = document.getElementById("new-password").value;
+        const confirmPassword = document.getElementById("confirm-password").value;
+
+        if (!GAPGPTMASKTOKEN6wc1deb6essX2X || !confirmPassword) {
+            alert("لطفاً هر دو قسمت رمز عبور را وارد کنید.");
+            return;
+        }
+
+        if (GAPGPTMASKTOKEN6wc1deb6essX3X.length < 6) {
+            alert("رمز عبور باید حداقل ۶ کاراکتر باشد.");
+            return;
+        }
+
+        if (GAPGPTMASKTOKEN6wc1deb6essX4X !== confirmPassword) {
+            alert("تکرار رمز عبور با رمز جدید یکسان نیست.");
+            return;
+        }
+
+        const { error } = await db.auth.updateUser({
+            password: GAPGPTMASKTOKEN6wc1deb6essX5X
+        });
+
+        if (error) {
+            alert("خطا در تغییر رمز عبور: "GAPGPTMASKTOKEN6wc1deb6essX6X"new-password").value = "";
+        document.getElementById("confirm-password").value = "";
+        togglePasswordBox();
+        alert("رمز عبور با موفقیت تغییر کرد.");
+    }
 
     // ================= بخش ادمین ================= //
 
@@ -338,7 +521,6 @@
         });
     }
 
-    // تابع اصلاح شده تغییر وضعیت پرداخت توسط ادمین (بدون خطای integer: "")
     async function togglePaid(chargeId, newStatus) {
         const item = currentCharges.find(c => String(c.id) === String(chargeId));
         const due = item && item.amount_due ? parseInt(item.amount_due, 10) : 0;
@@ -359,7 +541,6 @@
         await loadAdminCharges();
     }
 
-    // صدور شارژ دسته‌جمعی ۱۶ واحد
     document.getElementById("batch-charge-form").addEventListener("submit", async (e) => {
         e.preventDefault();
         const month = document.getElementById("batch-month").value.trim();
@@ -396,7 +577,7 @@
         loadAdminCharges();
     });
 
-    // ================= بخش کاربران (واحدها) ================= //
+    // ================= بخش واحدها ================= //
 
     async function loadUnitCharges() {
         const unitMatch = currentUser.email.match(/^unit(\d+)@/);
@@ -447,7 +628,6 @@
         });
     }
 
-    // ارسال رسید و آپلود تصویر توسط واحد
     async function uploadReceipt(chargeId) {
         const trackInput = document.getElementById(`track-${chargeId}`).value.trim();
         const fileInput = document.getElementById(`file-${chargeId}`);
@@ -460,7 +640,6 @@
 
         let imageUrl = null;
 
-        // اگر فایلی انتخاب شده باشد، آپلود می‌شود
         if (file) {
             if (file.size > 3 * 1024 * 1024) {
                 alert("حجم تصویر نباید بیشتر از ۳ مگابایت باشد.");
@@ -500,53 +679,7 @@
         loadUnitCharges();
     }
 
-    async function changePassword() {
-    const newPassword = document
-        .getElementById("new-password")
-        .value;
-
-    const confirmPassword = document
-        .getElementById("confirm-password")
-        .value;
-
-    if (!newPassword || !confirmPassword) {
-        alert("لطفاً هر دو قسمت رمز عبور را وارد کنید.");
-        return;
-    }
-
-    if (newPassword.length < 6) {
-        alert("رمز عبور باید حداقل ۶ کاراکتر باشد.");
-        return;
-    }
-
-    if (newPassword !== confirmPassword) {
-        alert("تکرار رمز عبور با رمز جدید یکسان نیست.");
-        return;
-    }
-
-    const { error } = await db.auth.updateUser({
-        password: newPassword
-    });
-
-    if (error) {
-        alert("خطا در تغییر رمز عبور: " + error.message);
-        return;
-    }
-
-    document.getElementById("new-password").value = "";
-    document.getElementById("confirm-password").value = "";
-
-    alert("رمز عبور با موفقیت تغییر کرد.");
-}
-
-function togglePasswordBox() {
-    const box = document.getElementById("password-box");
-    box.style.display = box.style.display === "none" ? "block" : "none";
-}
-
-    
-
-    // اجرای خودکار در لود اولیه
+    // شروع اجرای برنامه
     initApp();
 </script>
 </body>
