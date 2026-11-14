@@ -47,11 +47,11 @@
         <!-- Login Section -->
         <section id="login-section" class="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <h2 class="text-xl font-bold mb-2 text-slate-800 text-center">ورود به سامانه</h2>
-            <p class="text-xs text-slate-500 text-center mb-6">لطفاً شماره واحد و رمز عبور خود را وارد کنید</p>
+            <p class="text-xs text-slate-500 text-center mb-6">لطفاً واحد خود و رمز عبور را وارد کنید</p>
             
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">انتخاب واحد / مدیریت</label>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">واحد یا مدیریت</label>
                     <select id="login-unit" required class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
                         <option value="">انتخاب کنید...</option>
                         <option value="unit1">واحد ۱</option>
@@ -67,7 +67,7 @@
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">رمز عبور</label>
-                    <input type="password" id="login-pass" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <input type="password" id="login-secret-496b2e60" required placeholder="••••••••" class="w-full px-3 py-2 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500">
                 </div>
                 <button type="submit" id="login-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 rounded-xl transition">ورود به پنل</button>
                 <p id="login-error" class="text-red-500 text-xs text-center mt-2 hidden"></p>
@@ -82,25 +82,25 @@
                 <!-- Create Charge Card -->
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <span>➕</span> صدور شارژ جدید برای واحدها
+                        <span>➕</span> صدور شارژ جدید
                     </h3>
                     <form onsubmit="createCharge(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div>
                             <label class="block text-xs font-medium text-slate-600 mb-1">انتخاب واحد</label>
                             <select id="charge-unit" required class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm bg-white">
                                 <option value="all">تمام واحدها (۱ تا ۸)</option>
-                                <option value="unit1">واحد ۱</option>
-                                <option value="unit2">واحد ۲</option>
-                                <option value="unit3">واحد ۳</option>
-                                <option value="unit4">واحد ۴</option>
-                                <option value="unit5">واحد ۵</option>
-                                <option value="unit6">واحد ۶</option>
-                                <option value="unit7">واحد ۷</option>
-                                <option value="unit8">واحد ۸</option>
+                                <option value="1">واحد ۱</option>
+                                <option value="2">واحد ۲</option>
+                                <option value="3">واحد ۳</option>
+                                <option value="4">واحد ۴</option>
+                                <option value="5">واحد ۵</option>
+                                <option value="6">واحد ۶</option>
+                                <option value="7">واحد ۷</option>
+                                <option value="8">واحد ۸</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-600 mb-1">نام ماه / دوره</label>
+                            <label class="block text-xs font-medium text-slate-600 mb-1">دوره / ماه</label>
                             <input type="text" id="charge-month" required placeholder="مثال: آبان ۱۴۰۵" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
                         </div>
                         <div>
@@ -108,58 +108,58 @@
                             <input type="number" id="charge-amount" required placeholder="۵۰۰۰۰۰" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-sm">
                         </div>
                         <div class="flex items-end">
-                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-xl text-sm transition">صدور و ارسال</button>
+                            <button type="submit" id="create-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 rounded-xl text-sm transition">صدور شارژ</button>
                         </div>
                     </form>
                 </div>
 
-                <!-- Admin Danger Zone: Reset Charges -->
+                <!-- Admin Danger Zone -->
                 <div class="bg-red-50 border border-red-200 p-6 rounded-2xl">
                     <h3 class="text-lg font-bold text-red-700 mb-1 flex items-center gap-2">
-                        <span>⚠️</span> منطقه خطر: بازنشانی کلی شارژها
+                        <span>⚠️</span> بازنشانی و ریست کلیه شارژها
                     </h3>
-                    <p class="text-xs text-red-600 mb-4">این دکمه تمام صورتحساب‌ها و سوابق شارژ ثبت شده در سیستم را به طور کامل پاک می‌کند. این عمل غیرقابل بازگشت است.</p>
-                    <button onclick="resetAllCharges()" class="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-xl text-sm transition shadow-sm">
-                        حذف و صفر کردن همه شارژها
+                    <p class="text-xs text-red-600 mb-4">با کلیک روی این دکمه، تمام شارژها و پرداخت‌های ثبت‌شده در دیتابیس پاک خواهند شد.</p>
+                    <button onclick="resetAllCharges()" class="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-xl text-sm transition">
+                        حذف و صفر کردن همه رکوردها
                     </button>
                 </div>
             </div>
 
-            <!-- Unit Info & Bank Account Box -->
+            <!-- Bank Info Box -->
             <div id="bank-info-box" class="bg-gradient-to-r from-indigo-500 to-violet-600 text-white p-6 rounded-2xl shadow-sm">
-                <h3 class="font-bold text-lg mb-2">💳 اطلاعات پرداخت مستقیم ساختمان</h3>
-                <p class="text-xs text-indigo-100 mb-4">لطفاً پس از واریز کارت‌به‌کارت مبلغ شارژ، تصویر رسید یا کد پیگیری را در جدول زیر ثبت نمایید.</p>
+                <h3 class="font-bold text-lg mb-2">💳 مشخصات حساب بانکی ساختمان</h3>
+                <p class="text-xs text-indigo-100 mb-4">لطفاً پس از واریز کارت‌به‌کارت یا پایا، شماره پیگیری را در جدول زیر ثبت نمایید.</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white/10 p-4 rounded-xl backdrop-blur-sm text-sm">
                     <div>
                         <span class="block text-indigo-200 text-xs">شماره کارت:</span>
-                        <span id="card-num" class="font-mono font-bold tracking-wider text-base">۶۰۳۷-۹۹۷۴-XXXX-XXXX</span>
+                        <span class="font-mono font-bold tracking-wider text-base">۶۰۳۷-۹۹۷۴-XXXX-XXXX</span>
                     </div>
                     <div>
                         <span class="block text-indigo-200 text-xs">شماره شبا:</span>
-                        <span id="shaba-num" class="font-mono font-bold tracking-wider text-base">IR05-0540-0000-0002-XXXX-XX</span>
+                        <span class="font-mono font-bold tracking-wider text-base">IR05-0540-0000-0002-XXXX-XX</span>
                     </div>
                 </div>
             </div>
 
             <!-- Charges List Table -->
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
                 <div class="p-4 border-b border-slate-100 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-800">لیست صورتحساب‌ها و وضعیت پرداخت</h3>
-                    <button onclick="loadCharges()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">بروزرسانی لیست 🔄</button>
+                    <h3 class="font-bold text-slate-800">لیست وضعیت شارژها</h3>
+                    <button onclick="loadCharges()" class="text-xs text-indigo-600 hover:text-indigo-800 font-medium">بروزرسانی جدول 🔄</button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-sm">
                         <thead class="bg-slate-50 text-slate-500 text-xs uppercase">
                             <tr>
                                 <th class="px-4 py-3">واحد</th>
-                                <th class="px-4 py-3">دوره / ماه</th>
+                                <th class="px-4 py-3">دوره</th>
                                 <th class="px-4 py-3">مبلغ (تومان)</th>
                                 <th class="px-4 py-3">وضعیت</th>
-                                <th class="px-4 py-3">عملیات / ثبت فیش</th>
+                                <th class="px-4 py-3">عملیات</th>
                             </tr>
                         </thead>
                         <tbody id="charges-tbody" class="divide-y divide-slate-100">
-                            <!-- Dynamically Loaded -->
+                            <!-- Charges Rows -->
                         </tbody>
                     </table>
                 </div>
@@ -169,10 +169,10 @@
 
     </main>
 
-    <!-- Supabase Logic -->
+    <!-- App Logic -->
     <script>
         const SUPABASE_URL = "https://virkprhykbvcawaryrvp.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj"; // کلید خود را اینجا قرار دهید
+        const SUPABASE_KEY = "sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj"; // کلید anon خود را اینجا قرار دهید
 
         const { createClient } = supabase;
         const db = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -190,21 +190,23 @@
         async function handleLogin(e) {
             e.preventDefault();
             const unit = document.getElementById('login-unit').value;
-            const pass = document.getElementById('login-pass').value;
+            const GAPGPTMASKTOKENtlcs4n064t9X0X = document.getElementById('login-secret-496b2e60').value;
             const email = unit.includes('@') ? unit : `${unit}@sakhteman.local`;
             
             const btn = document.getElementById('login-btn');
             const err = document.getElementById('login-error');
             
-            btn.textContent = 'در حال ورود...';
+            btn.textContent = 'در حال بررسی...';
+            btn.disabled = true;
             err.classList.add('hidden');
 
-            const { data, error } = await db.auth.signInWithPassword({ email, password: pass });
-            
+            const { data, error } = await db.auth.signInWithPassword({ email, password: GAPGPTMASKTOKENtlcs4n064t9X1X });
+            btn.disabled = false;
+            btn.textContent = 'ورود به پنل';
+
             if (error) {
-                err.textContent = 'خطا در ورود: اطلاعات نادرست است.';
+                err.textContent = 'خطا در ورود: ' + error.message;
                 err.classList.remove('hidden');
-                btn.textContent = 'ورود به پنل';
             } else {
                 currentUser = data.user;
                 setupDashboard();
@@ -219,7 +221,6 @@
             document.getElementById('user-info').classList.add('hidden');
             document.getElementById('login-section').classList.remove('hidden');
             document.getElementById('login-form').reset();
-            document.getElementById('login-btn').textContent = 'ورود به پنل';
         }
 
         function setupDashboard() {
@@ -227,16 +228,16 @@
             document.getElementById('dashboard-section').classList.remove('hidden');
             document.getElementById('user-info').classList.remove('hidden');
 
-            const email = currentUser.email;
-            const isManager = email.includes('admin');
+            const email = currentUser.email || "";
+            const isManager = email.startsWith('admin');
             
             if (isManager) {
-                document.getElementById('welcome-msg').textContent = 'خوش آمدید: مدیر ساختمان';
+                document.getElementById('welcome-msg').textContent = 'مدیر ساختمان';
                 document.getElementById('admin-panel').classList.remove('hidden');
                 document.getElementById('bank-info-box').classList.add('hidden');
             } else {
-                const unitNum = email.split('@')[0].replace('unit', '');
-                document.getElementById('welcome-msg').textContent = `خوش آمدید: واحد ${unitNum}`;
+                const num = email.replace(/[^0-9]/g, "");
+                document.getElementById('welcome-msg').textContent = `واحد ${num}`;
                 document.getElementById('admin-panel').classList.add('hidden');
                 document.getElementById('bank-info-box').classList.remove('hidden');
             }
@@ -245,75 +246,84 @@
 
         async function createCharge(e) {
             e.preventDefault();
-            const targetUnit = document.getElementById('charge-unit').value;
-            const monthName = document.getElementById('charge-month').value;
-            const amountDue = parseInt(document.getElementById('charge-amount').value);
+            const target = document.getElementById('charge-unit').value;
+            const month = document.getElementById('charge-month').value.trim();
+            const amount = parseInt(document.getElementById('charge-amount').value, 10);
+            const btn = document.getElementById('create-btn');
 
-            let unitsToCharge = [];
-            if (targetUnit === 'all') {
-                for (let i = 1; i <= 8; i++) unitsToCharge.push(`unit${i}`);
+            btn.disabled = true;
+            btn.textContent = 'در حال صدور...';
+
+            let records = [];
+            if (target === 'all') {
+                for (let i = 1; i <= 8; i++) {
+                    records.push({ unit_number: i, month_name: month, amount_due: amount, is_paid: false });
+                }
             } else {
-                unitsToCharge.push(targetUnit);
+                records.push({ unit_number: parseInt(target, 10), month_name: month, amount_due: amount, is_paid: false });
             }
 
-            for (let u of unitsToCharge) {
-                await db.from('charges').insert([{
-                    unit_number: u,
-                    month_name: monthName,
-                    amount_due: amountDue,
-                    is_paid: false
-                }]);
-            }
+            const { error } = await db.from('charges').insert(records);
+            btn.disabled = false;
+            btn.textContent = 'صدور شارژ';
 
-            alert('شارژ با موفقیت صادر شد.');
-            document.getElementById('charge-month').value = '';
-            document.getElementById('charge-amount').value = '';
-            loadCharges();
+            if (error) {
+                alert('خطا در ایجاد شارژ: ' + error.message);
+            } else {
+                alert('شارژ با موفقیت صادر شد.');
+                document.getElementById('charge-month').value = '';
+                document.getElementById('charge-amount').value = '';
+                loadCharges();
+            }
         }
 
         async function resetAllCharges() {
-            if (!confirm('⚠️ آیا از حذف کامل تمام شارژها مطمئن هستید؟ این عملیات قابل بازگشت نیست!')) return;
+            if (!confirm('آیا مطمئن هستید؟ همه شارژها پاک خواهند شد.')) return;
             
-            const { error } = await db.from('charges').delete().neq('id', 0);
+            const { error } = await db.from('charges').delete().gte('id', 0);
             if (error) {
-                alert('خطا در حذف: ' + error.message);
+                alert('خطا در حذف شارژها: ' + error.message);
             } else {
-                alert('تمام شارژها با موفقیت پاک شدند.');
+                alert('تمامی شارژها حذف شدند.');
                 loadCharges();
             }
         }
 
         async function loadCharges() {
             const tbody = document.getElementById('charges-tbody');
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-400">در حال بارگذاری...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-slate-400">در حال دریافت اطلاعات...</td></tr>';
 
-            const email = currentUser.email;
-            const isManager = email.includes('admin');
+            const email = currentUser.email || "";
+            const isManager = email.startsWith('admin');
             
-            let query = db.from('charges').select('*').order('id', { ascending: false });
-            
+            let query = db.from('charges').select('*');
+
             if (!isManager) {
-                const unitName = email.split('@')[0];
-                query = query.eq('unit_number', unitName);
+                const num = parseInt(email.replace(/[^0-9]/g, ""), 10);
+                // تطبیق با هر دو حالت ممکن در دیتابیس (چه عدد 1 چه unit1)
+                query = query.or(`unit_number.eq.${num},unit_number.eq.unit${num}`);
             }
 
-            const { data, error } = await query;
+            const { data, error } = await query.order('id', { ascending: false });
+
             if (error) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500">خطا در دریافت اطلاعات</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-red-500 font-medium">خطا در دریافت اطلاعات: ${error.message}</td></tr>`;
                 return;
             }
 
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">هیچ صورتحسابی یافت نشد.</td></tr>`;
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-400">هیچ شارژی ثبت نشده است.</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = '';
             data.forEach(item => {
-                const unitDisplay = item.unit_number.replace('unit', 'واحد ');
+                const rawUnit = String(item.unit_number).replace('unit', '');
+                const unitTitle = `واحد ${rawUnit}`;
+                
                 const statusBadge = item.is_paid 
-                    ? '<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-medium">پرداخت شده</span>'
-                    : '<span class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-xs font-medium">در انتظار پرداخت</span>';
+                    ? '<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-semibold">پرداخت شده</span>'
+                    : '<span class="bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full text-xs font-semibold">در انتظار پرداخت</span>';
 
                 let actionHtml = '';
                 if (isManager) {
@@ -321,28 +331,28 @@
                         actionHtml = `<button onclick="confirmPayment(${item.id})" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-lg text-xs transition">تایید پرداخت</button>`;
                     } else {
                         actionHtml = `<span class="text-xs text-slate-400">تایید شده</span>`;
-                        if (item.receipt_tracking_code) {
-                            actionHtml += ` <span class="text-xs font-mono bg-slate-100 px-1.5 py-0.5 rounded">کد: ${item.receipt_tracking_code}</span>`;
-                        }
+                    }
+                    if (item.receipt_tracking_code) {
+                        actionHtml += `<div class="text-[11px] text-slate-500 mt-1 font-mono">پیگیری: ${item.receipt_tracking_code}</div>`;
                     }
                 } else {
                     if (!item.is_paid) {
                         actionHtml = `
-                            <div class="flex flex-col sm:flex-row gap-2 items-center">
-                                <input type="text" id="track-${item.id}" placeholder="کد پیگیری واریز" class="px-2 py-1 border border-slate-300 rounded-lg text-xs w-32">
-                                <button onclick="submitReceipt(${item.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1 rounded-lg text-xs transition">ثبت پرداخت</button>
+                            <div class="flex items-center gap-1">
+                                <input type="text" id="track-${item.id}" placeholder="کد پیگیری" class="px-2 py-1 border border-slate-300 rounded-lg text-xs w-28">
+                                <button onclick="submitReceipt(${item.id})" class="bg-emerald-600 hover:bg-emerald-700 text-white px-2.5 py-1 rounded-lg text-xs transition">ثبت</button>
                             </div>
                         `;
                     } else {
-                        actionHtml = `<span class="text-xs text-emerald-600 font-medium">پرداخت شما تایید شده است ✓</span>`;
+                        actionHtml = `<span class="text-xs text-emerald-600 font-medium">پرداخت تایید شده ✓</span>`;
                     }
                 }
 
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50">
-                        <td class="px-4 py-3 font-medium text-slate-800">${unitDisplay}</td>
-                        <td class="px-4 py-3 text-slate-600">${item.month_name}</td>
-                        <td class="px-4 py-3 font-mono text-slate-700">${item.amount_due.toLocaleString()} تومان</td>
+                        <td class="px-4 py-3 font-medium text-slate-800">${unitTitle}</td>
+                        <td class="px-4 py-3 text-slate-600">${item.month_name || '-'}</td>
+                        <td class="px-4 py-3 font-mono font-medium text-slate-700">${Number(item.amount_due || 0).toLocaleString()} تومان</td>
                         <td class="px-4 py-3">${statusBadge}</td>
                         <td class="px-4 py-3">${actionHtml}</td>
                     </tr>
@@ -351,29 +361,24 @@
         }
 
         async function submitReceipt(id) {
-            const trackingCode = document.getElementById(`track-${id}`).value;
-            if (!trackingCode) {
-                alert('لطفاً کد پیگیری واریز را وارد کنید.');
+            const input = document.getElementById(`track-${id}`);
+            const code = input ? input.value.trim() : '';
+            if (!code) {
+                alert('لطفاً شماره یا کد پیگیری را بنویسید.');
                 return;
             }
 
-            const { error } = await db.from('charges').update({
-                receipt_tracking_code: trackingCode
-            }).eq('id', id);
-
+            const { error } = await db.from('charges').update({ receipt_tracking_code: code }).eq('id', id);
             if (error) {
                 alert('خطا در ثبت: ' + error.message);
             } else {
-                alert('رسید و کد پیگیری با موفقیت ثبت شد. مدیر پس از بررسی تایید خواهد کرد.');
+                alert('کد پیگیری با موفقیت ثبت شد و در انتظار تایید مدیریت است.');
                 loadCharges();
             }
         }
 
         async function confirmPayment(id) {
-            const { error } = await db.from('charges').update({
-                is_paid: true
-            }).eq('id', id);
-
+            const { error } = await db.from('charges').update({ is_paid: true }).eq('id', id);
             if (error) {
                 alert('خطا: ' + error.message);
             } else {
