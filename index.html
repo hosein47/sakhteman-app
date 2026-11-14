@@ -3,312 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سامانه هوشمند شارژ ساختمان</title>
-    <!-- بارگذاری فونت مدرن وزیرمتن -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <title>مدیریت ساختمان پونک ۸</title>
+    <!-- کتابخانه کلاینت Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
         :root {
-            --primary: #3b82f6;
-            --primary-hover: #2563eb;
-            --primary-subtle: #eff6ff;
-            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --success-bg: #dcfce7;
-            --success-text: #15803d;
-            --pending-bg: #fef3c7;
-            --pending-text: #b45309;
             --danger: #ef4444;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.03);
+            --danger-hover: #dc2626;
+            --danger-bg: #fef2f2;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
         }
 
-        * { box-sizing: border-box; font-family: 'Vazirmatn', Tahoma, sans-serif; }
-        
-        body { 
-            background: var(--bg-gradient); 
-            color: var(--text-main); 
-            margin: 0; 
-            padding: 30px 16px; 
-            min-height: 100vh;
+        * {
+            box-sizing: border-box;
+            font-family: 'Vazirmatn', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 24px 16px;
         }
 
-        .container { 
-            width: 100%; 
-            max-width: 760px; 
-            margin: 0 auto; 
+        .container {
+            width: 100%;
+            max-width: 650px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .card { 
-            background: var(--card-bg); 
-            border-radius: 16px; 
-            padding: 28px; 
-            box-shadow: var(--shadow-md); 
-            border: 1px solid rgba(226, 232, 240, 0.8); 
-            margin-bottom: 24px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        .card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
         }
 
-        /* کارت ورود شکیل */
-        #login-card {
-            max-width: 420px;
-            margin: 60px auto 0;
-            padding: 36px 32px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
-            border-top: 4px solid var(--primary);
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        h1 { 
-            margin-top: 0; 
-            margin-bottom: 24px;
-            color: #0f172a; 
-            text-align: center; 
-            font-size: 1.5rem;
-            font-weight: 800;
-        }
-
-        h2 { 
-            margin-top: 0; 
-            margin-bottom: 18px;
-            color: #1e293b; 
-            font-size: 1.25rem;
+        h1, h2, h3 {
             font-weight: 700;
         }
 
-        .form-group { margin-bottom: 18px; }
-        
-        label { 
-            display: block; 
-            margin-bottom: 8px; 
-            font-weight: 600; 
-            font-size: 0.88rem; 
-            color: #334155;
-        }
-
-        input, select, textarea { 
-            width: 100%; 
-            padding: 12px 14px; 
-            border: 1.5px solid var(--border); 
-            border-radius: 10px; 
-            font-size: 0.95rem; 
-            transition: all 0.2s ease;
-            background-color: #fafafa;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-        }
-
-        button { 
-            width: 100%; 
-            padding: 13px; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 10px; 
-            font-weight: 700; 
-            font-size: 0.95rem;
-            cursor: pointer; 
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
-        }
-
-        button:hover { 
-            background: var(--primary-hover); 
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button.outline { 
-            background: transparent; 
-            border: 1.5px solid var(--border); 
-            color: var(--text-muted); 
-            box-shadow: none;
-        }
-
-        button.outline:hover { 
-            background: #f8fafc; 
-            border-color: #cbd5e1;
+        .title {
+            font-size: 1.25rem;
             color: var(--text-main);
         }
 
-        .hidden { display: none !important; }
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
 
-        .badge { 
-            display: inline-flex; 
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            justify-content: center;
             align-items: center;
-            padding: 4px 12px; 
-            border-radius: 20px; 
-            font-size: 0.8rem; 
-            font-weight: 700; 
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
         }
 
-        .badge-pending { 
-            background: var(--pending-bg); 
-            color: var(--pending-text); 
+        .btn-primary {
+            background-color: var(--primary);
+            color: #ffffff;
         }
 
-        .badge-paid { 
-            background: var(--success-bg); 
-            color: var(--success-text); 
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
         }
 
-        .charge-item { 
-            background: #f8fafc;
+        .btn-danger {
+            background-color: var(--danger);
+            color: #ffffff;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background: #f1f5f9;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-paid {
+            background-color: var(--success-bg);
+            color: var(--success);
+        }
+
+        .badge-unpaid {
+            background-color: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .charge-item {
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 18px; 
-            margin-bottom: 14px;
-            transition: border-color 0.2s ease;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .charge-item:hover {
-            border-color: #cbd5e1;
+        .charge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .header-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            margin-bottom: 24px;
-            background: white;
-            padding: 16px 20px;
-            border-radius: 14px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        details.password-section { 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            padding: 14px 18px; 
-            margin-bottom: 24px; 
-            background: #ffffff; 
-            box-shadow: var(--shadow-sm);
+        .charge-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
         }
 
-        details.password-section summary { 
-            cursor: pointer; 
-            font-weight: 700; 
-            color: var(--primary); 
-            outline: none; 
-            user-select: none;
+        .danger-zone {
+            border: 1.5px dashed var(--danger);
+            background-color: #fffafb;
         }
 
-        .status-msg { 
-            margin-top: 12px; 
-            font-size: 0.88rem; 
-            font-weight: 600; 
-            min-height: 1.2em; 
-        }
-
-        .amount-highlight {
-            font-size: 1.25rem;
-            color: var(--primary);
-            font-weight: 800;
-            margin: 6px 0;
-            letter-spacing: -0.5px;
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- فرم لاگین زیبا -->
+        <!-- کارت ورود -->
         <div id="login-card" class="card">
-            <h1>سامانه شارژ ساختمان</h1>
-            <div class="form-group">
-                <label for="login-user">شماره واحد (یا نام کاربری مدیر)</label>
-                <input type="text" id="login-user" placeholder="مثلاً: 1 یا admin">
+            <h1 class="title">ورود به سامانه پونک ۸</h1>
+            <p class="subtitle">لطفاً شماره واحد خود یا عبارت admin را وارد کنید</p>
+            <div style="margin-top: 20px;">
+                <div class="form-group">
+                    <label>نام کاربری (واحد یا admin)</label>
+                    <input type="text" id="login-user" placeholder="مثال: 1 یا admin">
+                </div>
+                <div class="form-group">
+                    <label>رمز عبور</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button class="btn btn-primary" onclick="handleLogin()">ورود به حساب</button>
             </div>
-            <div class="form-group">
-                <label for="login-pass">رمز عبور</label>
-                <input type="password" id="login-pass" placeholder="••••••••">
-            </div>
-            <button onclick="handleLogin()">ورود به حساب</button>
         </div>
 
         <!-- داشبورد اصلی -->
         <div id="dashboard" class="hidden">
-            <div class="header-bar">
-                <div>
-                    <h2 id="user-display-title" style="margin: 0 0 4px 0; font-size: 1.2rem;">داشبورد</h2>
+            <!-- کارت پروفایل و وضعیت کاربر -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <h2 class="title" id="user-display-title">پنل کاربر</h2>
+                        <div class="subtitle" id="user-email-subtitle"></div>
+                    </div>
                     <span id="user-role-badge" class="badge"></span>
                 </div>
-                <div style="width: auto;">
-                    <button class="outline" style="padding: 8px 16px; font-size: 0.85rem;" onclick="handleLogout()">خروج از حساب</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-outline" onclick="togglePasswordSection()">تغییر رمز عبور</button>
+                    <button class="btn btn-outline" style="color: var(--danger);" onclick="handleLogout()">خروج</button>
                 </div>
             </div>
 
-            <!-- بخش تغییر رمز عبور -->
-            <details id="password-details" class="password-section">
-                <summary>🔐 تغییر رمز عبور حساب</summary>
-                <div style="padding-top: 16px;">
+            <!-- بخش تغییر رمز عبور (پیش‌فرض مخفی) -->
+            <div id="password-change-card" class="card hidden">
+                <h3 class="title" style="font-size: 1.05rem;">تغییر رمز عبور</h3>
+                <p class="subtitle">رمز عبور جدید خود را وارد نمایید</p>
+                <div style="margin-top: 14px;">
                     <div class="form-group">
-                        <label for="current-password">رمز عبور فعلی:</label>
-                        <input type="password" id="current-password" autocomplete="current-password" placeholder="رمز عبور فعلی شما">
+                        <input type="password" id="new-password-input" placeholder="رمز عبور جدید (حداقل ۶ کاراکتر)">
                     </div>
-                    <div class="form-group">
-                        <label for="new-password">رمز عبور جدید (حداقل ۸ کاراکتر):</label>
-                        <input type="password" id="new-password" autocomplete="new-password" placeholder="رمز جدید">
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn btn-primary" onclick="handlePasswordChange()">ثبت رمز جدید</button>
+                        <button class="btn btn-outline" onclick="togglePasswordSection()">انصراف</button>
                     </div>
-                    <div class="form-group">
-                        <label for="confirm-password">تکرار رمز عبور جدید:</label>
-                        <input type="password" id="confirm-password" autocomplete="new-password" placeholder="تکرار رمز جدید">
-                    </div>
-                    <button id="change-password-button" onclick="handleChangePassword()">ثبت رمز عبور جدید</button>
-                    <div id="password-change-status" class="status-msg" aria-live="polite"></div>
                 </div>
-            </details>
-
-            <!-- بخش ثبت شارژ مخصوص مدیر -->
-            <div id="admin-create-charge" class="card hidden" style="border-top: 4px solid var(--primary);">
-                <h2>ثبت صورتحساب شارژ جدید</h2>
-                <div class="form-group">
-                    <label for="new-charge-unit">شماره واحد (۱ تا ۱۶):</label>
-                    <input type="number" id="new-charge-unit" min="1" max="16" placeholder="شماره واحد">
-                </div>
-                <div class="form-group">
-                    <label for="new-charge-month">نام دوره / ماه:</label>
-                    <input type="text" id="new-charge-month" placeholder="مثلاً: آبان ۱۴۰۳">
-                </div>
-                <div class="form-group">
-                    <label for="new-charge-amount">مبلغ شارژ (تومان):</label>
-                    <input type="number" id="new-charge-amount" placeholder="مثلاً: 350000">
-                </div>
-                <div class="form-group">
-                    <label for="new-charge-desc">توضیحات (اختیاری):</label>
-                    <textarea id="new-charge-desc" rows="2" placeholder="توضیحات لازم برای ساکنین..."></textarea>
-                </div>
-                <button onclick="createCharge()">ثبت صورتحساب</button>
             </div>
 
-            <!-- لیست شارژها -->
+            <!-- بخش اختصاصی مدیر: ایجاد شارژ جدید -->
+            <div id="admin-create-charge" class="card hidden">
+                <h3 class="title" style="font-size: 1.05rem;">ثبت صورتحساب / شارژ جدید</h3>
+                <p class="subtitle">صدور شارژ برای یک واحد یا تمام واحدها</p>
+                <div style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label>انتخاب واحد</label>
+                        <select id="charge-target-unit">
+                            <option value="all">همه واحدها (۱ تا ۸)</option>
+                            <option value="1">واحد ۱</option>
+                            <option value="2">واحد ۲</option>
+                            <option value="3">واحد ۳</option>
+                            <option value="4">واحد ۴</option>
+                            <option value="5">واحد ۵</option>
+                            <option value="6">واحد ۶</option>
+                            <option value="7">واحد ۷</option>
+                            <option value="8">واحد ۸</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>عنوان دوره یا ماه</label>
+                        <input type="text" id="charge-month" placeholder="مثال: شارژ آبان‌ماه ۱۴۰۵">
+                    </div>
+                    <div class="form-group">
+                        <label>مبلغ بدهی (تومان)</label>
+                        <input type="number" id="charge-amount" placeholder="مثال: 500000">
+                    </div>
+                    <div class="form-group">
+                        <label>توضیحات (اختیاری)</label>
+                        <input type="text" id="charge-desc" placeholder="مثال: شامل نظافت و هزینه سرویس آسانسور">
+                    </div>
+                    <button class="btn btn-primary" onclick="createCharge()">صدور و ثبت صورتحساب</button>
+                </div>
+            </div>
+
+            <!-- بخش اختصاصی مدیر: پاکسازی و ریست کل شارژها (Danger Zone) -->
+            <div id="admin-reset-zone" class="card danger-zone hidden">
+                <h3 class="title" style="font-size: 1.05rem; color: var(--danger);">عملیات حساس: حذف و صفر کردن کل شارژها</h3>
+                <p class="subtitle">برای شروع یک دوره یا سال مالی جدید می‌توانید کل سوابق شارژها و رسیدها را صفر کنید.</p>
+                <div style="margin-top: 14px;">
+                    <button class="btn btn-danger" onclick="resetAllCharges()">پاکسازی و ریست کل شارژها</button>
+                </div>
+            </div>
+
+            <!-- فهرست صورتحساب‌ها -->
             <div class="card">
-                <h2>صورتحساب‌ها و وضعیت پرداخت</h2>
-                <div id="charges-container">در حال دریافت اطلاعات...</div>
+                <h3 class="title" style="font-size: 1.05rem; margin-bottom: 16pGAPGPTMASKTOKENpwd4wz6tnnX0Xاب‌ها و شارژها</h3>
+                <div id="charges-container">
+                    در حال بارگذاری اطلاعات...
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // تنظیمات اتصال
+        // تنظیمات اتصال به دیتابیس Supabase
         const SUPABASE_URL = "https://virkprhykbvcawaryrvp.supabase.co";
         const SUPABASE_KEY = "sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj";
 
@@ -324,12 +319,13 @@
             }
         });
 
+        // مدیریت ورود کاربر
         async function handleLogin() {
             const userInput = document.getElementById("login-user").value.trim().toLowerCase();
-            const password = document.getElementById("login-pass").value;
+            const password = document.getElementById("login-password").value;
 
             if (!userInput || !password) {
-                alert("لطفاً شماره واحد/نام کاربری و رمز عبور را وارد کنید.");
+                alert("لطفاً نام کاربری و رمز عبور را وارد کنید.");
                 return;
             }
 
@@ -354,6 +350,7 @@
             setupUserSession(data.user);
         }
 
+        // راه‌اندازی نشست و داشبورد کاربر
         async function setupUserSession(user) {
             currentUser = user;
             isAdmin = user.email === "admin@sakhteman.local";
@@ -363,114 +360,68 @@
 
             const roleBadge = document.getElementById("user-role-badge");
             const title = document.getElementById("user-display-title");
+            const emailSubtitle = document.getElementById("user-email-subtitle");
+
+            emailSubtitle.textContent = user.email;
 
             if (isAdmin) {
-                title.textContent = "پنل مدیریت ساختمان";
-                roleBadge.textContent = "مدیر ساختمان";
+                title.textContent = "پنل مدیریت ساختمان (پونک ۸)";
+                roleBadge.textContent = "مدیر";
                 roleBadge.className = "badge badge-paid";
                 document.getElementById("admin-create-charge").classList.remove("hidden");
+                document.getElementById("admin-reset-zone").classList.remove("hidden");
             } else {
                 const unitNumber = user.email.replace(/[^0-9]/g, "");
                 title.textContent = "واحد شماره " + unitNumber;
-                roleBadge.textContent = "ساکن واحد " + unitNumber;
+                roleBadge.textContent = "ساکن";
                 roleBadge.className = "badge";
                 roleBadge.style.background = "#e0e7ff";
                 roleBadge.style.color = "#3730a3";
                 document.getElementById("admin-create-charge").classList.add("hidden");
+                document.getElementById("admin-reset-zone").classList.add("hidden");
             }
 
             loadCharges();
         }
 
-        async function handleChangePassword() {
-            const currentPassword = document.getElementById("current-password").value;
-            const newPassword = document.getElementById("new-password").value;
-            const confirmPassword = document.getElementById("confirm-password").value;
-            const status = document.getElementById("password-change-status");
-            const btn = document.getElementById("change-password-button");
+        // نمایش/پنهان کردن بخش تغییر رمز عبور
+        function togglePasswordSection() {
+            const card = document.getElementById("password-change-card");
+            card.classList.toggle("hidden");
+            document.getElementById("new-password-input").value = "";
+        }
 
-            status.textContent = "";
-            status.style.color = "var(--text-main)";
-
-            if (!currentPassword || !newPassword || !confirmPassword) {
-                status.textContent = "لطفاً تمام فیلدها را پر کنید.";
-                status.style.color = "var(--danger)";
+        // ثبت رمز عبور جدید
+        async function handlePasswordChange() {
+            const newPassword = document.getElementById("new-password-input").value;
+            if (!newPassword || newPassword.length < 6) {
+                alert("رمز عبور باید حداقل ۶ کاراکتر باشد.");
                 return;
             }
 
-            if (newPassword.length < 8) {
-                status.textContent = "رمز عبور جدید باید حداقل ۸ کاراکتر باشد.";
-                status.style.color = "var(--danger)";
-                return;
-            }
-
-            if (newPassword !== confirmPassword) {
-                status.textContent = "رمز جدید با تکرار آن یکسان نیست.";
-                status.style.color = "var(--danger)";
-                return;
-            }
-
-            if (newPassword === currentPassword) {
-                status.textContent = "رمز جدید نمی‌تواند مشابه رمز فعلی باشد.";
-                status.style.color = "var(--danger)";
-                return;
-            }
-
-            btn.disabled = true;
-            status.textContent = "در حال بررسی و ذخیره...";
-
-            try {
-                const { data, error: authError } = await db.auth.signInWithPassword({
-                    email: currentUser.email,
-                    password: currentPassword
-                });
-
-                if (authError || data.user.id !== currentUser.id) {
-                    status.textContent = "رمز عبور فعلی اشتباه است.";
-                    status.style.color = "var(--danger)";
-                    return;
-                }
-
-                const { error: updateError } = await db.auth.updateUser({ password: newPassword });
-
-                if (updateError) {
-                    status.textContent = "خطا در ثبت: " + updateError.message;
-                    status.style.color = "var(--danger)";
-                } else {
-                    status.textContent = "✅ رمز عبور با موفقیت بروزرسانی شد.";
-                    status.style.color = "var(--success-text)";
-                    document.getElementById("current-password").value = "";
-                    document.getElementById("new-password").value = "";
-                    document.getElementById("confirm-password").value = "";
-                }
-            } catch (err) {
-                status.textContent = "خطای غیرمنتظره در ارتباط رخ داد.";
-                status.style.color = "var(--danger)";
-            } finally {
-                btn.disabled = false;
+            const { error } = await db.auth.updateUser({ password: newPassword });
+            if (error) {
+                alert("خطا در تغییر رمز عبور: " + error.message);
+            } else {
+                alert("رمز عبور شما با موفقیت به‌روزرسانی شد.");
+                togglePasswordSection();
             }
         }
 
+        // خروج از حساب
         async function handleLogout() {
             await db.auth.signOut();
             currentUser = null;
             isAdmin = false;
-            
-            document.getElementById("login-user").value = "";
-            document.getElementById("login-pass").value = "";
-            document.getElementById("current-password").value = "";
-            document.getElementById("new-password").value = "";
-            document.getElementById("confirm-password").value = "";
-            document.getElementById("password-change-status").textContent = "";
-            document.getElementById("password-details").open = false;
-
             document.getElementById("login-card").classList.remove("hidden");
             document.getElementById("dashboard").classList.add("hidden");
+            document.getElementById("password-change-card").classList.add("hidden");
         }
 
+        // بارگذاری و نمایش صورتحساب‌ها
         async function loadCharges() {
             const container = document.getElementById("charges-container");
-            container.innerHTML = "<div style='color: var(--text-muted); text-align: center; padding: 20px;'>در حال دریافت اطلاعات...</div>";
+            container.innerHTML = "در حال دریافت اطلاعات...";
 
             let query = db.from("charges").select("*").order("created_at", { ascending: false });
 
@@ -482,145 +433,212 @@
             const { data, error } = await query;
 
             if (error) {
-                container.innerHTML = "<div style='color: var(--danger);'>خطا در دریافت اطلاعات: " + error.message + "</div>";
+                container.innerHTML = "خطا در بارگذاری اطلاعات: " + error.message;
                 return;
             }
 
             if (!data || data.length === 0) {
-                container.innerHTML = "<div style='color: var(--text-muted); text-align: center; padding: 20px;'>صورتحسابی ثبت نشده است.</div>";
+                container.innerHTML = "<p style='color: var(--text-muted); text-align: center; padding: 20px 0;'>هیچ صورتحسابی یافت نشد.</p>";
                 return;
             }
 
             container.innerHTML = "";
             data.forEach(item => {
-                const div = document.createElement("div");
-                div.className = "charge-item";
-                
-                const statusBadge = item.is_paid 
-                    ? '<span class="badge badge-paid">✓ پرداخت شده</span>' 
-                    : '<span class="badge badge-pending">⏳ در انتظار پرداخت</span>';
+                const itemDiv = document.createElement("div");
+                itemDiv.className = "charge-item";
 
-                let receiptHtml = "";
-                if (item.receipt_image_url) {
-                    receiptHtml = `<div style="margin-top: 6px;"><a href="${item.receipt_image_url}" target="_blank" style="font-size: 0.85rem; color: var(--primary); text-decoration: none; font-weight: 600;">📎 مشاهده تصویر فیش ارسالی</a></div>`;
+                const isPaid = item.is_paid;
+                const statusBadge = isPaid
+                    ? '<span class="badge badge-paid">پرداخت شده</span>'
+                    : '<span class="badge badge-unpaid">پرداخت نشده</span>';
+
+                let actionsHtml = "";
+                if (isAdmin) {
+                    if (!isPaid) {
+                        actionsHtml = `<button class="btn btn-outline" style="font-size: 0.85rem; padding: 8px 12px; margin-top: 8px;" onclick="confirmPayment(${item.id})">تأیید دستی پرداخت</button>`;
+                    }
+                } else {
+                    if (!isPaid) {
+                        actionsHtml = `
+                            <div style="margin-top: 8px; border-top: 1px dashed var(--border); padding-top: 8px;">
+                                <label style="font-size: 0.8rem; color: var(--text-muted);">ثبت فیش واریز / کد پیگیری:</label>
+                                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                    <input type="text" id="track-${item.id}" placeholder="کد رهگیری بانکی" style="font-size: 0.85rem; padding: 8px;">
+                                    <input type="file" id="receipt-${item.id}" accept="image/*" style="font-size: 0.8rem;">
+                                </div>
+                                <button class="btn btn-primary" style="font-size: 0.85rem; padding: 8px 12px; margin-top: 8px;" onclick="submitReceipt(${item.id})">ارسال رسید</button>
+                            </div>
+                        `;
+                    }
                 }
 
-                let actionHtml = "";
-                if (isAdmin && !item.is_paid) {
-                    actionHtml = `<button style="margin-top:12px; width:auto; padding: 7px 16px; background: #16a34a; font-size: 0.88rem;" onclick="confirmPayment(${item.id})">تأیید دریافت وجه</button>`;
-                } else if (!isAdmin && !item.is_paid) {
-                    actionHtml = `
-                        <div style="margin-top:14px; background: #ffffff; border: 1px dashed var(--border); padding: 14px; border-radius: 10px;">
-                            <label style="font-size: 0.82rem; color: var(--text-muted);">ثبت فیش واریزی:</label>
-                            <input type="text" id="track-${item.id}" placeholder="کد پیگیری بانکی" style="margin-bottom:8px; height: 38px; font-size: 0.88rem;">
-                            <input type="file" id="file-${item.id}" accept="image/*" style="margin-bottom:8px; font-size: 0.85rem; padding: 6px;">
-                            <button style="padding: 8px 14px; font-size: 0.88rem;" onclick="submitReceipt(${item.id})">ارسال رسید پرداخت</button>
-                        </div>
-                    `;
+                let receiptInfo = "";
+                if (item.receipt_tracking_code || item.receipt_image_url) {
+                    receiptInfo = `<div style="font-size: 0.8rem; background: #f8fafc; padding: 8px; border-radius: 6px; margin-top: 6px;">
+                        ${item.receipt_tracking_code ? `<div><strong>کد پیگیری:</strong> ${item.receipt_tracking_code}</div>` : ''}
+                        ${item.receipt_image_url ? `<div><a href="${item.receipt_image_url}" target="_blank" style="color: var(--primary);">مشاهده تصویر فیش ارسالی</a></div>` : ''}
+                    </div>`;
                 }
 
-                div.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                itemDiv.innerHTML = `
+                    <div class="charge-header">
                         <div>
-                            <span style="font-size: 1.05rem; font-weight: 700;">واحد ${item.unit_number} - دوره ${item.month_name}</span>
-                            <div class="amount-highlight">${item.amount_due.toLocaleString()} <span style="font-size: 0.9rem; font-weight: 500;">تومان</span></div>
-                            <div style="font-size: 0.88rem; color: var(--text-muted);">${item.description || ''}</div>
-                            ${item.receipt_tracking_code ? `<div style="font-size: 0.85rem; margin-top:6px; color: #334155;">کد پیگیری ثبت شده: <strong>${item.receipt_tracking_code}</strong></div>` : ''}
-                            ${receiptHtml}
+                            <strong>واحد ${item.unit_number}</strong> - <span>${item.month_name}</span>
                         </div>
-                        <div style="text-align: left;">
-                            ${statusBadge}
-                        </div>
+                        ${statusBadge}
                     </div>
-                    ${actionHtml}
+                    <div class="charge-meta">
+                        <span>مبلغ: <strong>${Number(item.amount_due).toLocaleString('fa-IR')} تومان</strong></span>
+                        <span>${item.description || ''}</span>
+                    </div>
+                    ${receiptInfo}
+                    ${actionsHtml}
                 `;
-                container.appendChild(div);
+                container.appendChild(itemDiv);
             });
         }
 
+        // صدور شارژ توسط مدیر
         async function createCharge() {
-            const unit = parseInt(document.getElementById("new-charge-unit").value);
-            const month = document.getElementById("new-charge-month").value.trim();
-            const amount = parseFloat(document.getElementById("new-charge-amount").value);
-            const desc = document.getElementById("new-charge-desc").value.trim();
+            const target = document.getElementById("charge-target-unit").value;
+            const month = document.getElementById("charge-month").value.trim();
+            const amount = parseFloat(document.getElementById("charge-amount").value);
+            const desc = document.getElementById("charge-desc").value.trim();
 
-            if (!unit || !month || !amount) {
-                alert("لطفاً شماره واحد، ماه و مبلغ را وارد کنید.");
+            if (!month || isNaN(amount) || amount <= 0) {
+                alert("لطفاً عنوان دوره و مبلغ معتبر را وارد کنید.");
                 return;
             }
 
-            const { error } = await db.from("charges").insert([
-                { unit_number: unit, month_name: month, amount_due: amount, description: desc, is_paid: false }
-            ]);
-
-            if (error) {
-                alert("خطا در ثبت: " + error.message);
+            const records = [];
+            if (target === "all") {
+                for (let u = 1; u <= 8; u++) {
+                    records.push({
+                        unit_number: u,
+                        month_name: month,
+                        amount_due: amount,
+                        description: desc,
+                        is_paid: false
+                    });
+                }
             } else {
-                alert("صورتحساب جدید با موفقیت ثبت شد.");
-                document.getElementById("new-charge-unit").value = "";
-                document.getElementById("new-charge-month").value = "";
-                document.getElementById("new-charge-amount").value = "";
-                document.getElementById("new-charge-desc").value = "";
-                loadCharges();
+                records.push({
+                    unit_number: parseInt(target, 10),
+                    month_name: month,
+                    amount_due: amount,
+                    description: desc,
+                    is_paid: false
+                });
             }
+
+            const { error } = await db.from("charges").insert(records);
+            if (error) {
+                alert("خطا در ایجاد شارژ: " + error.message);
+                return;
+            }
+
+            alert("صورتحساب با موفقیت صادر شد.");
+            document.getElementById("charge-month").value = "";
+            document.getElementById("charge-amount").value = "";
+            document.getElementById("charge-desc").value = "";
+            loadCharges();
         }
 
+        // ارسال رسید و فیش توسط ساکن
         async function submitReceipt(chargeId) {
-            const trackCode = document.getElementById(`track-${chargeId}`).value.trim();
-            const fileInput = document.getElementById(`file-${chargeId}`);
+            const trackInput = document.getElementById(`track-${chargeId}`);
+            const fileInput = document.getElementById(`receipt-${chargeId}`);
+
+            const trackingCode = trackInput.value.trim();
             const file = fileInput.files[0];
 
-            if (!trackCode) {
-                alert("لطفاً کد پیگیری را وارد کنید.");
+            if (!trackingCode && !file) {
+                alert("لطفاً حداقل کد پیگیری یا عکس فیش را وارد کنید.");
                 return;
             }
 
-            let publicUrl = null;
+            let imageUrl = null;
             if (file) {
-                const fileName = `${Date.now()}_${file.name}`;
-                const { data: uploadData, error: uploadError } = await db.storage
-                    .from('receipts')
+                const fileExt = file.name.split('.').pop();
+                const fileName = `receipt_${chargeId}_${Date.now()}.${fileExt}`;
+
+                const { error: uploadError } = await db.storage
+                    .from("receipts")
                     .upload(fileName, file);
 
                 if (uploadError) {
-                    alert("خطا در بارگذاری تصویر: " + uploadError.message);
+                    alert("خطا در آپلود عکس فیش: " + uploadError.message);
                     return;
                 }
 
-                const { data: urlData } = db.storage
-                    .from('receipts')
-                    .getPublicUrl(fileName);
-                
-                publicUrl = urlData.publicUrl;
+                const { data } = db.storage.from("receipts").getPublicUrl(fileName);
+                imageUrl = data.publicUrl;
             }
 
-            const { error } = await db.from("charges")
-                .update({ 
-                    receipt_tracking_code: trackCode, 
-                    receipt_image_url: publicUrl 
-                })
+            const updateData = {};
+            if (trackingCode) updateData.receipt_tracking_code = trackingCode;
+            if (imageUrl) updateData.receipt_image_url = imageUrl;
+
+            const { error: updateError } = await db
+                .from("charges")
+                .update(updateData)
                 .eq("id", chargeId);
 
-            if (error) {
-                alert("خطا در ثبت رسید: " + error.message);
-            } else {
-                alert("رسید پرداخت ثبت شد و برای تأیید مدیر ارسال گردید.");
-                loadCharges();
+            if (updateError) {
+                alert("خطا در ثبت رسید: " + updateError.message);
+                return;
             }
+
+            alert("فیش واریز با موفقیت ارسال شد و در انتظار بررسی مدیر است.");
+            loadCharges();
         }
 
+        // تأیید پرداخت توسط مدیر
         async function confirmPayment(chargeId) {
-            if (!confirm("آیا دریافت وجه این صورتحساب را تأیید می‌کنید؟")) return;
+            if (!confirm("آیا پرداخت این صورتحساب را تأیید می‌کنید؟")) return;
 
-            const { error } = await db.from("charges")
+            const { error } = await db
+                .from("charges")
                 .update({ is_paid: true })
                 .eq("id", chargeId);
 
             if (error) {
-                alert("خطا: " + error.message);
-            } else {
-                loadCharges();
+                alert("خطا در تأیید پرداخت: " + error.message);
+                return;
             }
+
+            loadCharges();
+        }
+
+        // عملیات حساس: حذف و ریست تمام شارژها (فقط برای مدیر)
+        async function resetAllCharges() {
+            if (!isAdmin) {
+                alert("فقط مدیر مجاز به انجام این عملیات است.");
+                return;
+            }
+
+            const step1 = confirm("آیا کاملاً مطمئن هستید؟ با این کار تمام سوابق شارژها و رسیدهای ثبت‌شده برای همه واحدها پاک خواهند شد و این عملیات قابل بازگشت نیست.");
+            if (!step1) return;
+
+            const step2 = prompt("برای تأیید نهایی، لطفاً کلمه 'حذف' را تایپ کنید:");
+            if (step2 !== "حذف") {
+                alert("عملیات به دلیل عدم تطابق تایید نهایی لغو شد.");
+                return;
+            }
+
+            // حذف تمامی رکوردهای جدول شارژها
+            const { error } = await db
+                .from("charges")
+                .delete()
+                .not("id", "is", null);
+
+            if (error) {
+                alert("خطا در پاکسازی شارژها: " + error.message);
+                return;
+            }
+
+            alert("تمام شارژها با موفقیت پاکسازی و سیستم ریست شد.");
+            await loadCharges();
         }
     </script>
 </body>
