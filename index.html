@@ -18,627 +18,377 @@
             --warning: #d97706;
         }
 
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            margin: 0;
-            padding: 20px;
-            direction: rtl;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: center;
         }
 
         .container {
-            max-width: 950px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 900px;
         }
 
         .card {
             background: var(--card);
-            border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
         }
 
-        .hidden {
-            display: none !important;
+        h1, h2 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
         }
 
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 14px;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
             font-weight: 500;
         }
 
-        input[type="text"], input[type="password"], input[type="number"], input[type="file"] {
+        input, select, textarea {
             width: 100%;
-            padding: 10px;
+            padding: 0.75rem;
             border: 1px solid var(--border);
             border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 14px;
+            font-size: 0.95rem;
         }
 
         button {
             background-color: var(--primary);
-            color: #fff;
+            color: white;
             border: none;
-            padding: 10px 18px;
+            padding: 0.75rem 1.5rem;
             border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.2s;
+            width: 100%;
+            transition: background 0.2s;
         }
 
         button:hover {
             background-color: var(--primary-hover);
         }
 
-        .btn-danger {
-            background-color: var(--danger) !important;
+        button.outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            margin-top: 0.5rem;
         }
 
-        .btn-danger:hover {
-            background-color: #b91c1c !important;
+        button.outline:hover {
+            background-color: #eff6ff;
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
+        .hidden {
+            display: none !important;
         }
 
-        .top-bar {
+        .header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .top-bar-actions {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        /* بخش کادر تغییر رمز */
-        .password-toggle-btn {
-            background: #ffffff;
-            color: var(--text);
-            border: 1px solid var(--border);
-            padding: 7px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .password-toggle-btn:hover {
-            background: #f1f5f9;
-        }
-
-        .password-box {
-            background: #f8fafc;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
-
-        .password-box h3 {
-            margin-top: 0;
-            font-size: 15px;
-        }
-
-        .password-box-form {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .password-box-form input {
-            max-width: 200px;
-        }
-
-        .btn-cancel {
-            background-color: #e2e8f0;
-            color: #334155;
-        }
-
-        .btn-cancel:hover {
-            background-color: #cbd5e1;
-        }
-
-        /* آمار */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
-            margin-bottom: 20px;
-        }
-
-        .stat-box {
-            background: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .stat-box h4 {
-            margin: 0 0 8px 0;
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .stat-box p {
-            margin: 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .stat-box.success p { color: var(--success); }
-        .stat-box.danger p { color: var(--danger); }
-
-        /* جدول */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            text-align: right;
-        }
-
-        th, td {
-            padding: 10px 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background-color: #f1f5f9;
-            font-weight: 600;
+            margin-bottom: 1.5rem;
         }
 
         .badge {
             display: inline-block;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: bold;
         }
 
-        .badge-paid { background: #dcfce7; color: #15803d; }
-        .badge-review { background: #fef3c7; color: #b45309; }
-        .badge-unpaid { background: #fee2e2; color: #b91c1c; }
+        .badge-paid { background: #dcfce7; color: var(--success); }
+        .badge-unpaid { background: #fee2e2; color: var(--danger); }
+
+        .charge-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: #fff;
+        }
 
         .receipt-link {
+            display: inline-block;
             color: var(--primary);
             text-decoration: underline;
-            font-weight: 500;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- بخش ورود به سیستم -->
-    <div id="login-section" class="card">
-        <h2>ورود به سامانه ساختمان</h2>
-        <form id="login-form">
-            <div class="form-group">
-                <label>نام کاربری (مثلاً unit1 یا admin):</label>
-                <input type="text" id="username" placeholder="unit1 تا unit16 یا admin" required>
-            </div>
-            <div class="form-group">
-                <label>رمز عبور:</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit" id="login-btn">ورود</button>
-            <p id="login-error" style="color: var(--danger); margin-top: 10px; font-size: 13px;"></p>
-        </form>
+    <!-- بخش لاگین -->
+    <div id="login-card" class="card">
+        <h1>ورود به سامانه شارژ ساختمان</h1>
+        <div class="form-group">
+            <label for="login-user">شماره واحد (یا نام کاربری مدیر)</label>
+            <input type="text" id="login-user" placeholder="مثلاً: 1 یا admin">
+        </div>
+        <div class="form-group">
+            <label for="login-pass">رمز عبور</label>
+            <input type="password" id="login-pass">
+        </div>
+        <button onclick="handleLogin()">ورود</button>
     </div>
 
-    <!-- داشبورد اصلی پس از ورود -->
-    <div id="dashboard-section" class="hidden">
-        <div class="card top-bar">
+    <!-- داشبورد اصلی بعد از لاگین -->
+    <div id="dashboard" class="hidden">
+        <div class="header-bar">
             <div>
-                <span style="font-weight: bold;">کاربر جاری: </span>
-                <span id="current-user-display"></span>
+                <h2 id="user-display-title">داشبورد</h2>
+                <span id="user-role-badge" class="badge"></span>
             </div>
-            <div class="top-bar-actions">
-                <button type="button" onclick="togglePasswordBox()" class="password-toggle-btn">🔑 تغییر رمز عبور</button>
-                <button id="logout-btn" class="btn-danger btn-sm">خروج از حساب</button>
-            </div>
-        </div>
-
-        <!-- کادر تاشوی تغییر رمز عبور (در حالت پیش‌فرض مخفی) -->
-        <div id="password-box" class="card password-box" style="display: none;">
-            <h3>تغییر رمز عبور حساب شما</h3>
-            <div class="password-box-form">
-                <input type="password" id="new-password" placeholder="رمز عبور جدید (حداقل ۶ کاراکتر)" minlength="6">
-                <input type="password" id="confirm-password" placeholder="تکرار رمز عبور جدید" minlength="6">
-                <button type="button" onclick="changePassword()">ثبت رمز جدید</button>
-                <button type="button" onclick="togglePasswordBox()" class="btn-cancel">انصراف</button>
+            <div style="width: auto;">
+                <button class="outline" style="width: auto; padding: 0.4rem 1rem;" onclick="handleLogout()">خروج</button>
             </div>
         </div>
 
-        <!-- پنل ادمین -->
-        <div id="admin-panel" class="hidden">
-            <!-- آمار مالی -->
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <h4>کل شارژ مطالبه‌شده</h4>
-                    <p id="stat-total">۰ تومان</p>
-                </div>
-                <div class="stat-box success">
-                    <h4>مجموع واریز شده</h4>
-                    <p id="stat-paid">۰ تومان</p>
-                </div>
-                <div class="stat-box danger">
-                    <h4>مجموع بدهی‌ها</h4>
-                    <p id="stat-unpaid">۰ تومان</p>
-                </div>
+        <!-- پنل ثبت شارژ جدید فقط مخصوص مدیر -->
+        <div id="admin-create-charge" class="card hidden">
+            <h2>ثبت شارژ جدید برای واحدها</h2>
+            <div class="form-group">
+                <label for="new-charge-unit">شماره واحد (۱ تا ۱۶):</label>
+                <input type="number" id="new-charge-unit" min="1" max="16" placeholder="شماره واحد">
             </div>
-
-            <!-- صدور شارژ دسته جمعی -->
-            <div class="card">
-                <h3>صدور شارژ گروهی (برای تمام ۱۶ واحد)</h3>
-                <form id="batch-charge-form">
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-                        <div class="form-group">
-                            <label>نام ماه یا عنوان:</label>
-                            <input type="text" id="batch-month" placeholder="مثلاً: آبان ۱۴۰۳" required>
-                        </div>
-                        <div class="form-group">
-                            <label>مبلغ هر واحد (تومان):</label>
-                            <input type="number" id="batch-amount" placeholder="مثلاً: 350000" required>
-                        </div>
-                        <div class="form-group">
-                            <label>توضیحات (اختیاری):</label>
-                            <input type="text" id="batch-description" placeholder="هزینه سرویس آسانسور، نظافت...">
-                        </div>
-                    </div>
-                    <button type="submit" style="margin-top: 6px;">ثبت برای ۱۶ واحد</button>
-                </form>
+            <div class="form-group">
+                <label for="new-charge-month">نام دوره / ماه:</label>
+                <input type="text" id="new-charge-month" placeholder="مثلاً: آبان ۱۴۰۳">
             </div>
-
-            <!-- جدول لیست شارژها برای ادمین -->
-            <div class="card">
-                <h3>لیست کل شارژها</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>واحد</th>
-                                <th>ماه</th>
-                                <th>مبلغ (تومان)</th>
-                                <th>وضعیت</th>
-                                <th>کد پیگیری</th>
-                                <th>رسید</th>
-                                <th>عملیات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-charges-table"></tbody>
-                    </table>
-                </div>
+            <div class="form-group">
+                <label for="new-charge-amount">مبلغ شارژ (تومان):</label>
+                <input type="number" id="new-charge-amount" placeholder="مثلاً: 350000">
             </div>
+            <div class="form-group">
+                <label for="new-charge-desc">توضیحات (اختیاری):</label>
+                <textarea id="new-charge-desc" rows="2" placeholder="شارژ عادی، تعمیر آسانسور و ..."></textarea>
+            </div>
+            <button onclick="createCharge()">ثبت صورتحساب</button>
         </div>
 
-        <!-- پنل واحد -->
-        <div id="unit-panel" class="hidden">
-            <div class="card">
-                <h3>صورت‌حساب‌های شما</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ماه</th>
-                                <th>مبلغ (تومان)</th>
-                                <th>وضعیت</th>
-                                <th>توضیحات</th>
-                                <th>ثبت فیش / پیگیری</th>
-                            </tr>
-                        </thead>
-                        <tbody id="unit-charges-table"></tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- لیست شارژها -->
+        <div class="card">
+            <h2>لیست صورتحساب‌ها</h2>
+            <div id="charges-container">در حال دریافت اطلاعات...</div>
         </div>
     </div>
 </div>
 
 <script>
-    // تنظیمات اتصال Supabase
     const SUPABASE_URL = "https://virkprhykbvcawaryrvp.supabase.co";
-    const SUPABASE_ANON_KEY = "GAPGPTMASKTOKEN6wc1deb6essX0X";
+    const SUPABASE_KEY = "GAPGPTMASKTOKENt4927pv3psX0X";
 
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let currentUser = null;
-    let currentCharges = [];
+    let isAdmin = false;
 
-    function formatMoney(num) {
-        return Number(num || 0).toLocaleString('fa-IR');
-    }
-
-    // ورود به سیستم
-    document.getElementById("login-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const userInput = document.getElementById("username").value.trim().toLowerCase();
-        const password = document.getElementById("password").value;
-        const errEl = document.getElementById("login-error");
-        errEl.innerText = "";
-
-        const email = userInput.includes("@") ? userInput : `${userInput}@sakhteman.local`;
-
-        const { data, error } = await db.auth.signInWithPassword({ email, password });
-        if (error) {
-            errEl.innerText = "نام کاربری یا رمز عبور اشتباه است.";
-            return;
+    // بررسی ورود اولیه
+    window.addEventListener("DOMContentLoaded", async () => {
+        const { data: { session } } = await db.auth.getSession();
+        if (session) {
+            setupUserSession(session.user);
         }
-
-        initApp();
     });
 
-    // بررسی ورود و لود صفحه
-    async function initApp() {
-        const { data: { user } } = await db.auth.getUser();
-        currentUser = user;
+    async function handleLogin() {
+        const userInput = document.getElementById("login-user").value.trim().toLowerCase();
+        const password = document.getElementById("login-pass").value;
 
-        if (!currentUser) {
-            document.getElementById("login-section").classList.remove("hidden");
-            document.getElementById("dashboard-section").classList.add("hidden");
+        if (!userInput || !password) {
+            alert("لطفاً نام کاربری و رمز عبور را وارد کنید.");
             return;
         }
 
-        document.getElementById("login-section").classList.add("hidden");
-        document.getElementById("dashboard-section").classList.remove("hidden");
-        document.getElementById("current-user-display").innerText = currentUser.email.replace("@sakhteman.local", "");
-
-        if (currentUser.email === "admin@sakhteman.local") {
-            document.getElementById("admin-panel").classList.remove("hidden");
-            document.getElementById("unit-panel").classList.add("hidden");
-            loadAdminCharges();
+        let email = "";
+        if (userInput === "admin") {
+            email = "admin@sakhteman.local";
         } else {
-            document.getElementById("admin-panel").classList.add("hidden");
-            document.getElementById("unit-panel").classList.remove("hidden");
-            loadUnitCharges();
+            const unitNumber = userInput.replace(/[^0-9]/g, "");
+            email = "unit" + unitNumber + "@sakhteman.local";
         }
+
+        const { data, error } = await db.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+        if (error) {
+            alert("نام کاربری یا رمز عبور اشتباه است: " + error.message);
+            return;
+        }
+
+        setupUserSession(data.user);
     }
 
-    // خروج از حساب
-    document.getElementById("logout-btn").addEventListener("click", async () => {
+    async function setupUserSession(user) {
+        currentUser = user;
+        isAdmin = user.email === "admin@sakhteman.local";
+
+        document.getElementById("login-card").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+
+        const roleBadge = document.getElementById("user-role-badge");
+        const title = document.getElementById("user-display-title");
+
+        if (isAdmin) {
+            title.textContent = "پنل مدیریت ساختمان";
+            roleBadge.textContent = "مدیر";
+            roleBadge.className = "badge badge-paid";
+            document.getElementById("admin-create-charge").classList.remove("hidden");
+        } else {
+            const unitNumber = user.email.replace(/[^0-9]/g, "");
+            title.textContent = "واحد شماره " + unitNumber;
+            roleBadge.textContent = "ساکن";
+            roleBadge.className = "badge";
+            roleBadge.style.background = "#e0e7ff";
+            roleBadge.style.color = "#3730a3";
+            document.getElementById("admin-create-charge").classList.add("hidden");
+        }
+
+        loadCharges();
+    }
+
+    async function handleLogout() {
         await db.auth.signOut();
-        window.location.reload();
-    });
-
-    // باز/بستن کادر تغییر رمز عبور
-    function togglePasswordBox() {
-        const box = document.getElementById("password-box");
-        box.style.display = (box.style.display === "none" || box.style.display === "") ? "block" : "none";
+        currentUser = null;
+        isAdmin = false;
+        document.getElementById("login-card").classList.remove("hidden");
+        document.getElementById("dashboard").classList.add("hidden");
     }
 
-    // اجرای تغییر رمز عبور کاربر
-    async function changePassword() {
-    const newPassword = document.getElementById("new-password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
+    async function loadCharges() {
+        const container = document.getElementById("charges-container");
+        container.innerHTML = "در حال دریافت اطلاعات...";
 
-    if (!newPassword || !confirmPassword) {
-        alert("لطفاً هر دو قسمت رمز عبور را وارد کنید.");
-        return;
-    }
+        let query = db.from("charges").select("*").order("created_at", { ascending: false });
 
-    if (newPassword.length < 6) {
-        alert("رمز عبور باید حداقل ۶ کاراکتر باشد.");
-        return;
-    }
+        if (!isAdmin) {
+            const unitNumber = parseInt(currentUser.email.replace(/[^0-9]/g, ""), 10);
+            query = query.eq("unit_number", unitNumber);
+        }
 
-    if (newPassword !== confirmPassword) {
-        alert("تکرار رمز عبور با رمز جدید یکسان نیست.");
-        return;
-    }
-
-    const { error } = await db.auth.updateUser({
-        password: newPassword
-    });
-
-    if (error) {
-        alert("خطا در تغییر رمز عبور: " + error.message);
-        return;
-    }
-
-    document.getElementById("new-password").value = "";
-    document.getElementById("confirm-password").value = "";
-    togglePasswordBox();
-    alert("رمز عبور با موفقیت تغییر کرد.");
-}
-
-    
-    // ================= بخش ادمین ================= //
-
-    async function loadAdminCharges() {
-        const { data, error } = await db
-            .from("charges")
-            .select("*")
-            .order("unit_number", { ascending: true })
-            .order("created_at", { ascending: false });
+        const { data, error } = await query;
 
         if (error) {
-            alert("خطا در دریافت لیست شارژها: " + error.message);
+            container.innerHTML = "خطا در بارگذاری اطلاعات: " + error.message;
             return;
         }
 
-        currentCharges = data || [];
-        renderAdminCharges();
-        calcAdminStats();
-    }
+        if (!data || data.length === 0) {
+            container.innerHTML = "<p>هیچ صورتحسابی یافت نشد.</p>";
+            return;
+        }
 
-    function calcAdminStats() {
-        let total = 0, paid = 0;
-        currentCharges.forEach(c => {
-            const due = parseInt(c.amount_due, 10) || 0;
-            const p = parseInt(c.amount_paid, 10) || 0;
-            total += due;
-            if (c.is_paid) {
-                paid += (p > 0 ? p : due);
+        container.innerHTML = "";
+        data.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "charge-item";
+
+            const statusBadge = item.is_paid
+                ? `<span class="badge badge-paid">پرداخت شده</span>`
+                : `<span class="badge badge-unpaid">پرداخت نشده</span>`;
+
+            let receiptHtml = "";
+            if (item.receipt_image_url) {
+                receiptHtml = `<br><a class="receipt-link" href="${item.receipt_image_url}" target="_blank">مشاهده فیش واریزی</a>`;
             }
-        });
 
-        document.getElementById("stat-total").innerText = formatMoney(total) + " تومان";
-        document.getElementById("stat-paid").innerText = formatMoney(paid) + " تومان";
-        document.getElementById("stat-unpaid").innerText = formatMoney(total - paid) + " تومان";
-    }
-
-    function renderAdminCharges() {
-        const tbody = document.getElementById("admin-charges-table");
-        tbody.innerHTML = "";
-
-        currentCharges.forEach(c => {
-            let statusBadge = c.is_paid 
-                ? '<span class="badge badge-paid">پرداخت شده</span>' 
-                : (c.receipt_tracking_code ? '<span class="badge badge-review">در انتظار تایید</span>' : '<span class="badge badge-unpaid">پرداخت نشده</span>');
-
-            let receiptLink = c.receipt_image_url 
-                ? `<a href="${c.receipt_image_url}" target="_blank" class="receipt-link">مشاهده فیش</a>` 
-                : "-";
-
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td><strong>واحد ${c.unit_number}</strong></td>
-                <td>${c.month_name}</td>
-                <td>${formatMoney(c.amount_due)}</td>
-                <td>${statusBadge}</td>
-                <td>${c.receipt_tracking_code || "-"}</td>
-                <td>${receiptLink}</td>
-                <td>
-                    <button class="btn-sm ${c.is_paid ? 'btn-danger' : ''}" onclick="togglePaid(${c.id}, ${!c.is_paid})">
-                        ${c.is_paid ? 'لغو تایید' : 'تایید پرداخت'}
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-        });
-    }
-
-    async function togglePaid(chargeId, newStatus) {
-        const item = currentCharges.find(c => String(c.id) === String(chargeId));
-        const due = item && item.amount_due ? parseInt(item.amount_due, 10) : 0;
-
-        const { error } = await db
-            .from("charges")
-            .update({
-                is_paid: Boolean(newStatus),
-                amount_paid: newStatus ? due : 0
-            })
-            .eq("id", chargeId);
-
-        if (error) {
-            alert("خطا در تغییر وضعیت: " + error.message);
-            return;
-        }
-
-        await loadAdminCharges();
-    }
-
-    document.getElementById("batch-charge-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const month = document.getElementById("batch-month").value.trim();
-        const amount = parseInt(document.getElementById("batch-amount").value, 10);
-        const description = document.getElementById("batch-description").value.trim();
-
-        if (!amount || amount <= 0) {
-            alert("لطفاً مبلغ معتبری وارد کنید.");
-            return;
-        }
-
-        const rows = [];
-        for (let u = 1; u <= 16; u++) {
-            rows.push({
-                unit_number: u,
-                month_name: month,
-                amount_due: amount,
-                amount_paid: 0,
-                is_paid: false,
-                description: description || null
-            });
-        }
-
-        const { error } = await db.from("charges").insert(rows);
-        if (error) {
-            alert("خطا در ایجاد شارژها: " + error.message);
-            return;
-        }
-
-        alert("شارژ این ماه برای هر ۱۶ واحد با موفقیت ثبت شد.");
-        document.getElementById("batch-month").value = "";
-        document.getElementById("batch-amount").value = "";
-        document.getElementById("batch-description").value = "";
-        loadAdminCharges();
-    });
-
-    // ================= بخش واحدها ================= //
-
-    async function loadUnitCharges() {
-        const unitMatch = currentUser.email.match(/^unit(\d+)@/);
-        if (!unitMatch) return;
-        const myUnit = parseInt(unitMatch[1], 10);
-
-        const { data, error } = await db
-            .from("charges")
-            .select("*")
-            .eq("unit_number", myUnit)
-            .order("created_at", { ascending: false });
-
-        if (error) {
-            alert("خطا در دریافت صورت‌حساب: " + error.message);
-            return;
-        }
-
-        const tbody = document.getElementById("unit-charges-table");
-        tbody.innerHTML = "";
-
-        data.forEach(c => {
-            let statusBadge = c.is_paid 
-                ? '<span class="badge badge-paid">پرداخت شده و تایید شد</span>' 
-                : (c.receipt_tracking_code ? '<span class="badge badge-review">فیش ثبت شد (در انتظار تایید)</span>' : '<span class="badge badge-unpaid">پرداخت نشده</span>');
-
-            let actionHtml = "-";
-            if (!c.is_paid) {
+            let actionHtml = "";
+            if (isAdmin && !item.is_paid) {
                 actionHtml = `
-                    <div style="display: flex; flex-direction: column; gap: 6px;">
-                        <input type="text" id="track-${c.id}" placeholder="کد پیگیری بانکی" value="${c.receipt_tracking_code || ''}" style="padding: 4px 8px; font-size: 12px;">
-                        <input type="file" id="file-${c.id}" accept="image/*" style="font-size: 11px;">
-                        <button class="btn-sm" onclick="uploadReceipt(${c.id})">ارسال رسید</button>
+                    <div style="margin-top: 10px;">
+                        <button style="width: auto; padding: 0.4rem 0.8rem; background: var(--success);" onclick="confirmPayment(${item.id})">تأیید پرداخت</button>
                     </div>
                 `;
-            } else if (c.receipt_image_url) {
-                actionHtml = `<a href="${c.receipt_image_url}" target="_blank" class="receipt-link">رسید ارسالی شما</a>`;
+            } else if (!isAdmin && !item.is_paid) {
+                actionHtml = `
+                    <div style="margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 10px;">
+                        <label style="font-size: 0.8rem;">ارسال تصویر فیش یا کد رهگیری:</label>
+                        <input type="text" id="track-${item.id}" placeholder="کد رهگیری بانکی" style="margin-bottom: 5px;">
+                        <input type="file" id="file-${item.id}" accept="image/*" style="margin-bottom: 5px;">
+                        <button style="width: auto; padding: 0.4rem 0.8rem;" onclick="submitReceipt(${item.id})">ارسال رسید</button>
+                    </div>
+                `;
             }
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${c.month_name}</td>
-                <td>${formatMoney(c.amount_due)}</td>
-                <td>${statusBadge}</td>
-                <td>${c.description || "-"}</td>
-                <td>${actionHtml}</td>
+            div.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <strong>واحد ${item.unit_number} - دوره: ${item.month_name}</strong>
+                    ${statusBadge}
+                </div>
+                <div>مبلغ: <strong>${Number(item.amount_due).toLocaleString("fa-IR")} تومان</strong></div>
+                ${item.description ? `<div style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">توضیحات: ${item.description}</div>` : ""}
+                ${item.receipt_tracking_code ? `<div style="font-size: 0.85rem; margin-top: 4px;">کد پیگیری: ${item.receipt_tracking_code}</div>` : ""}
+                ${receiptHtml}
+                ${actionHtml}
             `;
-            tbody.appendChild(tr);
+
+            container.appendChild(div);
         });
     }
 
-    async function uploadReceipt(chargeId) {
-        const trackInput = document.getElementById(`track-${chargeId}`).value.trim();
+    async function createCharge() {
+        const unit = document.getElementById("new-charge-unit").value;
+        const month = document.getElementById("new-charge-month").value;
+        const amount = document.getElementById("new-charge-amount").value;
+        const desc = document.getElementById("new-charge-desc").value;
+
+        if (!unit || !month || !amount) {
+            alert("لطفاً شماره واحد، دوره و مبلغ را وارد کنید.");
+            return;
+        }
+
+        const { error } = await db.from("charges").insert([
+            {
+                unit_number: parseInt(unit, 10),
+                month_name: month,
+                amount_due: parseFloat(amount),
+                description: desc,
+                is_paid: false
+            }
+        ]);
+
+        if (error) {
+            alert("خطا در ثبت: " + error.message);
+        } else {
+            alert("صورتحساب با موفقیت ثبت شد.");
+            document.getElementById("new-charge-month").value = "";
+            document.getElementById("new-charge-amount").value = "";
+            document.getElementById("new-charge-desc").value = "";
+            loadCharges();
+        }
+    }
+
+    async function submitReceipt(chargeId) {
+        const trackCode = document.getElementById(`track-${chargeId}`).value;
         const fileInput = document.getElementById(`file-${chargeId}`);
         const file = fileInput.files[0];
 
-        if (!trackInput && !file) {
+        if (!trackCode && !file) {
             alert("لطفاً حداقل کد پیگیری یا تصویر رسید را وارد کنید.");
             return;
         }
@@ -646,13 +396,7 @@
         let imageUrl = null;
 
         if (file) {
-            if (file.size > 3 * 1024 * 1024) {
-                alert("حجم تصویر نباید بیشتر از ۳ مگابایت باشد.");
-                return;
-            }
-            const fileExt = file.name.split('.').pop();
-            const fileName = `receipt_${chargeId}_${Date.now()}.${fileExt}`;
-
+            const fileName = `${Date.now()}_${file.name}`;
             const { data: uploadData, error: uploadError } = await db.storage
                 .from("receipts")
                 .upload(fileName, file);
@@ -662,30 +406,42 @@
                 return;
             }
 
-            const { data: publicUrlData } = db.storage.from("receipts").getPublicUrl(fileName);
-            imageUrl = publicUrlData.publicUrl;
+            const { data: publicData } = db.storage
+                .from("receipts")
+                .getPublicUrl(fileName);
+
+            imageUrl = publicData.publicUrl;
         }
 
         const updateData = {};
-        if (trackInput) updateData.receipt_tracking_code = trackInput;
+        if (trackCode) updateData.receipt_tracking_code = trackCode;
         if (imageUrl) updateData.receipt_image_url = imageUrl;
 
-        const { error: dbError } = await db
-            .from("charges")
+        const { error } = await db.from("charges")
             .update(updateData)
             .eq("id", chargeId);
 
-        if (dbError) {
-            alert("خطا در ثبت اطلاعات رسید: " + dbError.message);
-            return;
+        if (error) {
+            alert("خطا در ذخیره رسید: " + error.message);
+        } else {
+            alert("رسید با موفقیت ارسال شد و در انتظار تایید مدیر است.");
+            loadCharges();
         }
-
-        alert("رسید شما با موفقیت ثبت شد و برای ادمین ارسال گردید.");
-        loadUnitCharges();
     }
 
-    // شروع اجرای برنامه
-    initApp();
+    async function confirmPayment(chargeId) {
+        const { error } = await db.from("charges")
+            .update({ is_paid: true })
+            .eq("id", chargeId);
+
+        if (error) {
+            alert("خطا در تایید پرداخت: " + error.message);
+        } else {
+            alert("پرداخت با موفقیت تایید شد.");
+            loadCharges();
+        }
+    }
 </script>
+
 </body>
 </html>
