@@ -3,98 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سامانه مدیریت شارژ ساختمان</title>
+    <title>سامانه هوشمند شارژ ساختمان</title>
+    <!-- بارگذاری فونت مدرن وزیرمتن -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg: #f8fafc;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --primary-subtle: #eff6ff;
+            --bg-gradient: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
             --card-bg: #ffffff;
-            --text: #1e293b;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
             --border: #e2e8f0;
-            --success: #16a34a;
-            --danger: #dc2626;
+            --success-bg: #dcfce7;
+            --success-text: #15803d;
+            --pending-bg: #fef3c7;
+            --pending-text: #b45309;
+            --danger: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.03);
         }
 
-        * { box-sizing: border-box; font-family: Tahoma, Arial, sans-serif; }
-        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; line-height: 1.6; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .card { background: var(--card-bg); border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid var(--border); margin-bottom: 20px; }
-        h1, h2 { margin-top: 0; color: #0f172a; text-align: center; }
-        .form-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9rem; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
-        button { width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
-        button:hover { background: var(--primary-hover); }
-        button.outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
-        button.outline:hover { background: #eff6ff; }
-        .hidden { display: none !important; }
-        .badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.8rem; font-weight: bold; }
-        .badge-pending { background: #fef3c7; color: #92400e; }
-        .badge-paid { background: #dcfce7; color: #166534; }
-        .charge-item { border-bottom: 1px solid var(--border); padding: 16px 0; }
-        .charge-item:last-child { border-bottom: none; }
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        * { box-sizing: border-box; font-family: 'Vazirmatn', Tahoma, sans-serif; }
         
-        /* استایل جدید برای تغییر رمز */
-        details.password-section { border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 20px; background: #fff; }
-        details.password-section summary { cursor: pointer; font-weight: bold; color: var(--primary); padding: 5px; outline: none; }
-        .status-msg { margin-top: 10px; font-size: 0.85rem; font-weight: bold; min-height: 1.2em; }
+        body { 
+            background: var(--bg-gradient); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 30px 16px; 
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 760px; 
+            margin: 0 auto; 
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            border-radius: 16px; 
+            padding: 28px; 
+            box-shadow: var(--shadow-md); 
+            border: 1px solid rgba(226, 232, 240, 0.8); 
+            margin-bottom: 24px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* کارت ورود شکیل */
+        #login-card {
+            max-width: 420px;
+            margin: 60px auto 0;
+            padding: 36px 32px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            border-top: 4px solid var(--primary);
+        }
+
+        h1 { 
+            margin-top: 0; 
+            margin-bottom: 24px;
+            color: #0f172a; 
+            text-align: center; 
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        h2 { 
+            margin-top: 0; 
+            margin-bottom: 18px;
+            color: #1e293b; 
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .form-group { margin-bottom: 18px; }
+        
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            font-size: 0.88rem; 
+            color: #334155;
+        }
+
+        input, select, textarea { 
+            width: 100%; 
+            padding: 12px 14px; 
+            border: 1.5px solid var(--border); 
+            border-radius: 10px; 
+            font-size: 0.95rem; 
+            transition: all 0.2s ease;
+            background-color: #fafafa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        button { 
+            width: 100%; 
+            padding: 13px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            font-weight: 700; 
+            font-size: 0.95rem;
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+
+        button:hover { 
+            background: var(--primary-hover); 
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.outline { 
+            background: transparent; 
+            border: 1.5px solid var(--border); 
+            color: var(--text-muted); 
+            box-shadow: none;
+        }
+
+        button.outline:hover { 
+            background: #f8fafc; 
+            border-color: #cbd5e1;
+            color: var(--text-main);
+        }
+
+        .hidden { display: none !important; }
+
+        .badge { 
+            display: inline-flex; 
+            align-items: center;
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+        }
+
+        .badge-pending { 
+            background: var(--pending-bg); 
+            color: var(--pending-text); 
+        }
+
+        .badge-paid { 
+            background: var(--success-bg); 
+            color: var(--success-text); 
+        }
+
+        .charge-item { 
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px; 
+            margin-bottom: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .charge-item:hover {
+            border-color: #cbd5e1;
+        }
+
+        .header-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 24px;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        details.password-section { 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            padding: 14px 18px; 
+            margin-bottom: 24px; 
+            background: #ffffff; 
+            box-shadow: var(--shadow-sm);
+        }
+
+        details.password-section summary { 
+            cursor: pointer; 
+            font-weight: 700; 
+            color: var(--primary); 
+            outline: none; 
+            user-select: none;
+        }
+
+        .status-msg { 
+            margin-top: 12px; 
+            font-size: 0.88rem; 
+            font-weight: 600; 
+            min-height: 1.2em; 
+        }
+
+        .amount-highlight {
+            font-size: 1.25rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin: 6px 0;
+            letter-spacing: -0.5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- فرم لاگین -->
+        <!-- فرم لاگین زیبا -->
         <div id="login-card" class="card">
-            <h1>ورود به سامانه شارژ ساختمان</h1>
+            <h1>سامانه شارژ ساختمان</h1>
             <div class="form-group">
                 <label for="login-user">شماره واحد (یا نام کاربری مدیر)</label>
                 <input type="text" id="login-user" placeholder="مثلاً: 1 یا admin">
             </div>
             <div class="form-group">
                 <label for="login-pass">رمز عبور</label>
-                <input type="password" id="login-pass">
+                <input type="password" id="login-pass" placeholder="••••••••">
             </div>
-            <button onclick="handleLogin()">ورود</button>
+            <button onclick="handleLogin()">ورود به حساب</button>
         </div>
 
         <!-- داشبورد اصلی -->
         <div id="dashboard" class="hidden">
             <div class="header-bar">
                 <div>
-                    <h2 id="user-display-title" style="margin-bottom: 5px;">داشبورد</h2>
+                    <h2 id="user-display-title" style="margin: 0 0 4px 0; font-size: 1.2rem;">داشبورد</h2>
                     <span id="user-role-badge" class="badge"></span>
                 </div>
                 <div style="width: auto;">
-                    <button class="outline" style="padding: 6px 16px;" onclick="handleLogout()">خروج</button>
+                    <button class="outline" style="padding: 8px 16px; font-size: 0.85rem;" onclick="handleLogout()">خروج از حساب</button>
                 </div>
             </div>
 
-            <!-- بخش تغییر رمز عبور (جدید) -->
+            <!-- بخش تغییر رمز عبور -->
             <details id="password-details" class="password-section">
-                <summary>🔐 تغییر رمز عبور</summary>
-                <div style="padding-top: 15px;">
+                <summary>🔐 تغییر رمز عبور حساب</summary>
+                <div style="padding-top: 16px;">
                     <div class="form-group">
                         <label for="current-password">رمز عبور فعلی:</label>
-                        <input type="password" id="current-password" autocomplete="current-password">
+                        <input type="password" id="current-password" autocomplete="current-password" placeholder="رمز عبور فعلی شما">
                     </div>
                     <div class="form-group">
                         <label for="new-password">رمز عبور جدید (حداقل ۸ کاراکتر):</label>
-                        <input type="password" id="new-password" autocomplete="new-password">
+                        <input type="password" id="new-password" autocomplete="new-password" placeholder="رمز جدید">
                     </div>
                     <div class="form-group">
                         <label for="confirm-password">تکرار رمز عبور جدید:</label>
-                        <input type="password" id="confirm-password" autocomplete="new-password">
+                        <input type="password" id="confirm-password" autocomplete="new-password" placeholder="تکرار رمز جدید">
                     </div>
-                    <button id="change-password-button" onclick="handleChangePassword()">بروزرسانی رمز عبور</button>
+                    <button id="change-password-button" onclick="handleChangePassword()">ثبت رمز عبور جدید</button>
                     <div id="password-change-status" class="status-msg" aria-live="polite"></div>
                 </div>
             </details>
 
             <!-- بخش ثبت شارژ مخصوص مدیر -->
-            <div id="admin-create-charge" class="card hidden">
-                <h2>ثبت شارژ جدید برای واحدها</h2>
+            <div id="admin-create-charge" class="card hidden" style="border-top: 4px solid var(--primary);">
+                <h2>ثبت صورتحساب شارژ جدید</h2>
                 <div class="form-group">
                     <label for="new-charge-unit">شماره واحد (۱ تا ۱۶):</label>
                     <input type="number" id="new-charge-unit" min="1" max="16" placeholder="شماره واحد">
@@ -109,14 +294,14 @@
                 </div>
                 <div class="form-group">
                     <label for="new-charge-desc">توضیحات (اختیاری):</label>
-                    <textarea id="new-charge-desc" rows="2" placeholder="توضیحات لازم..."></textarea>
+                    <textarea id="new-charge-desc" rows="2" placeholder="توضیحات لازم برای ساکنین..."></textarea>
                 </div>
                 <button onclick="createCharge()">ثبت صورتحساب</button>
             </div>
 
             <!-- لیست شارژها -->
             <div class="card">
-                <h2>لیست صورتحساب‌ها</h2>
+                <h2>صورتحساب‌ها و وضعیت پرداخت</h2>
                 <div id="charges-container">در حال دریافت اطلاعات...</div>
             </div>
         </div>
@@ -125,7 +310,8 @@
     <script>
         // تنظیمات اتصال
         const SUPABASE_URL = "https://virkprhykbvcawaryrvp.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj"; 
+        const SUPABASE_KEY = "sb_publishable_V3f8YRCSNQNhH7yrFhaLCA_c-lm6Flj";
+
         const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
@@ -143,7 +329,7 @@
             const password = document.getElementById("login-pass").value;
 
             if (!userInput || !password) {
-                alert("لطفاً نام کاربری و رمز عبور را وارد کنید.");
+                alert("لطفاً شماره واحد/نام کاربری و رمز عبور را وارد کنید.");
                 return;
             }
 
@@ -180,13 +366,13 @@
 
             if (isAdmin) {
                 title.textContent = "پنل مدیریت ساختمان";
-                roleBadge.textContent = "مدیر";
+                roleBadge.textContent = "مدیر ساختمان";
                 roleBadge.className = "badge badge-paid";
                 document.getElementById("admin-create-charge").classList.remove("hidden");
             } else {
                 const unitNumber = user.email.replace(/[^0-9]/g, "");
                 title.textContent = "واحد شماره " + unitNumber;
-                roleBadge.textContent = "ساکن";
+                roleBadge.textContent = "ساکن واحد " + unitNumber;
                 roleBadge.className = "badge";
                 roleBadge.style.background = "#e0e7ff";
                 roleBadge.style.color = "#3730a3";
@@ -197,68 +383,68 @@
         }
 
         async function handleChangePassword() {
-            const currentPass = document.getElementById("current-password").value;
-            const newPass = document.getElementById("new-password").value;
-            const confirmPass = document.getElementById("confirm-password").value;
+            const currentPassword = document.getElementById("current-password").value;
+            const newPassword = document.getElementById("new-password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
             const status = document.getElementById("password-change-status");
             const btn = document.getElementById("change-password-button");
 
             status.textContent = "";
-            status.style.color = "var(--text)";
+            status.style.color = "var(--text-main)";
 
-            if (!currentPass || !newPass || !confirmPass) {
+            if (!currentPassword || !newPassword || !confirmPassword) {
                 status.textContent = "لطفاً تمام فیلدها را پر کنید.";
                 status.style.color = "var(--danger)";
                 return;
             }
 
-            if (newPass.length < 8) {
-                status.textContent = "رمز جدید باید حداقل ۸ کاراکتر باشد.";
+            if (newPassword.length < 8) {
+                status.textContent = "رمز عبور جدید باید حداقل ۸ کاراکتر باشد.";
                 status.style.color = "var(--danger)";
                 return;
             }
 
-            if (newPass !== confirmPass) {
-                status.textContent = "رمز جدید با تکرار آن مطابقت ندارد.";
+            if (newPassword !== confirmPassword) {
+                status.textContent = "رمز جدید با تکرار آن یکسان نیست.";
                 status.style.color = "var(--danger)";
                 return;
             }
 
-            if (newPass === currentPass) {
-                status.textContent = "رمز جدید نمی‌تواند با رمز فعلی یکی باشد.";
+            if (newPassword === currentPassword) {
+                status.textContent = "رمز جدید نمی‌تواند مشابه رمز فعلی باشد.";
                 status.style.color = "var(--danger)";
                 return;
             }
 
             btn.disabled = true;
-            status.textContent = "در حال بررسی...";
+            status.textContent = "در حال بررسی و ذخیره...";
 
             try {
                 const { data, error: authError } = await db.auth.signInWithPassword({
                     email: currentUser.email,
-                    password: currentPass
+                    password: currentPassword
                 });
 
                 if (authError || data.user.id !== currentUser.id) {
-                    status.textContent = "رمز فعلی اشتباه است.";
+                    status.textContent = "رمز عبور فعلی اشتباه است.";
                     status.style.color = "var(--danger)";
                     return;
                 }
 
-                const { error: updateError } = await db.auth.updateUser({ password: newPass });
+                const { error: updateError } = await db.auth.updateUser({ password: newPassword });
 
                 if (updateError) {
-                    status.textContent = "خطا در بروزرسانی: " + updateError.message;
+                    status.textContent = "خطا در ثبت: " + updateError.message;
                     status.style.color = "var(--danger)";
                 } else {
-                    status.textContent = "✅ رمز عبور با موفقیت تغییر یافت.";
-                    status.style.color = "var(--success)";
+                    status.textContent = "✅ رمز عبور با موفقیت بروزرسانی شد.";
+                    status.style.color = "var(--success-text)";
                     document.getElementById("current-password").value = "";
                     document.getElementById("new-password").value = "";
                     document.getElementById("confirm-password").value = "";
                 }
             } catch (err) {
-                status.textContent = "خطای غیرمنتظره رخ داد.";
+                status.textContent = "خطای غیرمنتظره در ارتباط رخ داد.";
                 status.style.color = "var(--danger)";
             } finally {
                 btn.disabled = false;
@@ -270,7 +456,6 @@
             currentUser = null;
             isAdmin = false;
             
-            // پاکسازی فیلدها
             document.getElementById("login-user").value = "";
             document.getElementById("login-pass").value = "";
             document.getElementById("current-password").value = "";
@@ -285,7 +470,7 @@
 
         async function loadCharges() {
             const container = document.getElementById("charges-container");
-            container.innerHTML = "در حال دریافت اطلاعات...";
+            container.innerHTML = "<div style='color: var(--text-muted); text-align: center; padding: 20px;'>در حال دریافت اطلاعات...</div>";
 
             let query = db.from("charges").select("*").order("created_at", { ascending: false });
 
@@ -297,12 +482,12 @@
             const { data, error } = await query;
 
             if (error) {
-                container.innerHTML = "خطا در دریافت اطلاعات: " + error.message;
+                container.innerHTML = "<div style='color: var(--danger);'>خطا در دریافت اطلاعات: " + error.message + "</div>";
                 return;
             }
 
             if (!data || data.length === 0) {
-                container.innerHTML = "هیچ صورتحسابی یافت نشد.";
+                container.innerHTML = "<div style='color: var(--text-muted); text-align: center; padding: 20px;'>صورتحسابی ثبت نشده است.</div>";
                 return;
             }
 
@@ -312,24 +497,24 @@
                 div.className = "charge-item";
                 
                 const statusBadge = item.is_paid 
-                    ? '<span class="badge badge-paid">پرداخت شده</span>' 
-                    : '<span class="badge badge-pending">در انتظار پرداخت</span>';
+                    ? '<span class="badge badge-paid">✓ پرداخت شده</span>' 
+                    : '<span class="badge badge-pending">⏳ در انتظار پرداخت</span>';
 
                 let receiptHtml = "";
                 if (item.receipt_image_url) {
-                    receiptHtml = `<br><a href="${item.receipt_image_url}" target="_blank" style="font-size: 0.8rem; color: var(--primary);">مشاهده تصویر فیش</a>`;
+                    receiptHtml = `<div style="margin-top: 6px;"><a href="${item.receipt_image_url}" target="_blank" style="font-size: 0.85rem; color: var(--primary); text-decoration: none; font-weight: 600;">📎 مشاهده تصویر فیش ارسالی</a></div>`;
                 }
 
                 let actionHtml = "";
                 if (isAdmin && !item.is_paid) {
-                    actionHtml = `<button style="margin-top:10px; width:auto; padding: 6px 12px; background: var(--success);" onclick="confirmPayment(${item.id})">تأیید پرداخت</button>`;
+                    actionHtml = `<button style="margin-top:12px; width:auto; padding: 7px 16px; background: #16a34a; font-size: 0.88rem;" onclick="confirmPayment(${item.id})">تأیید دریافت وجه</button>`;
                 } else if (!isAdmin && !item.is_paid) {
                     actionHtml = `
-                        <div style="margin-top:10px; background: #f1f5f9; padding: 10px; border-radius: 6px;">
-                            <label style="font-size: 0.8rem;">کد پیگیری و تصویر فیش را وارد کنید:</label>
-                            <input type="text" id="track-${item.id}" placeholder="کد پیگیری" style="margin-bottom:5px; height: 35px;">
-                            <input type="file" id="file-${item.id}" accept="image/*" style="margin-bottom:5px; font-size: 0.8rem;">
-                            <button style="padding: 6px 12px;" onclick="submitReceipt(${item.id})">ارسال رسید</button>
+                        <div style="margin-top:14px; background: #ffffff; border: 1px dashed var(--border); padding: 14px; border-radius: 10px;">
+                            <label style="font-size: 0.82rem; color: var(--text-muted);">ثبت فیش واریزی:</label>
+                            <input type="text" id="track-${item.id}" placeholder="کد پیگیری بانکی" style="margin-bottom:8px; height: 38px; font-size: 0.88rem;">
+                            <input type="file" id="file-${item.id}" accept="image/*" style="margin-bottom:8px; font-size: 0.85rem; padding: 6px;">
+                            <button style="padding: 8px 14px; font-size: 0.88rem;" onclick="submitReceipt(${item.id})">ارسال رسید پرداخت</button>
                         </div>
                     `;
                 }
@@ -337,10 +522,10 @@
                 div.innerHTML = `
                     <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                         <div>
-                            <strong>واحد ${item.unit_number} - ${item.month_name}</strong>
-                            <div style="font-size: 1.1rem; color: var(--primary); font-weight: bold; margin: 4px 0;">${item.amount_due.toLocaleString()} تومان</div>
-                            <div style="font-size: 0.85rem; color: #64748b;">${item.description || ''}</div>
-                            ${item.receipt_tracking_code ? `<div style="font-size: 0.8rem; margin-top:5px;">کد پیگیری: ${item.receipt_tracking_code}</div>` : ''}
+                            <span style="font-size: 1.05rem; font-weight: 700;">واحد ${item.unit_number} - دوره ${item.month_name}</span>
+                            <div class="amount-highlight">${item.amount_due.toLocaleString()} <span style="font-size: 0.9rem; font-weight: 500;">تومان</span></div>
+                            <div style="font-size: 0.88rem; color: var(--text-muted);">${item.description || ''}</div>
+                            ${item.receipt_tracking_code ? `<div style="font-size: 0.85rem; margin-top:6px; color: #334155;">کد پیگیری ثبت شده: <strong>${item.receipt_tracking_code}</strong></div>` : ''}
                             ${receiptHtml}
                         </div>
                         <div style="text-align: left;">
@@ -371,7 +556,7 @@
             if (error) {
                 alert("خطا در ثبت: " + error.message);
             } else {
-                alert("صورتحساب با موفقیت ثبت شد.");
+                alert("صورتحساب جدید با موفقیت ثبت شد.");
                 document.getElementById("new-charge-unit").value = "";
                 document.getElementById("new-charge-month").value = "";
                 document.getElementById("new-charge-amount").value = "";
@@ -419,13 +604,13 @@
             if (error) {
                 alert("خطا در ثبت رسید: " + error.message);
             } else {
-                alert("رسید با موفقیت ارسال شد و در انتظار تأیید مدیر است.");
+                alert("رسید پرداخت ثبت شد و برای تأیید مدیر ارسال گردید.");
                 loadCharges();
             }
         }
 
         async function confirmPayment(chargeId) {
-            if (!confirm("آیا پرداخت این صورتحساب را تأیید می‌کنید؟")) return;
+            if (!confirm("آیا دریافت وجه این صورتحساب را تأیید می‌کنید؟")) return;
 
             const { error } = await db.from("charges")
                 .update({ is_paid: true })
