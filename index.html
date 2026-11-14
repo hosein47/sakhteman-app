@@ -538,32 +538,41 @@
             });
         }
 
-        async function createCharge() {
-            const unit = parseInt(document.getElementById("new-charge-unit").value);
-            const month = document.getElementById("new-charge-month").value.trim();
-            const amount = parseFloat(document.getElementById("new-charge-amount").value);
-            const desc = document.getElementById("new-charge-desc").value.trim();
+    async function createCharge() {
+    // گرفتن مقادیر از فرم
+    const unit = parseInt(document.getElementById("new-charge-unit").value);
+    const month = document.getElementById("new-charge-month").value.trim();
+    const amount = parseFloat(document.getElementById("new-charge-amount").value);
+    const desc = document.getElementById("new-charge-desc").value.trim();
 
-            if (!unit || !month || !amount) {
-                alert("لطفاً شماره واحد، ماه و مبلغ را وارد کنید.");
-                return;
-            }
+    // چک کردن خالی نبودن
+    if (!unit || !month || isNaN(amount)) {
+        alert("لطفاً شماره واحد، ماه و مبلغ را به درستی وارد کنید.");
+        return;
+    }
 
-            const { error } = await db.from("charges").insert([
-                { unit_number: unit, month_name: month, amount_due: amount, description: desc, is_paid: false }
-            ]);
+    // عملیات ثبت در دیتابیس
+    const { error } = await db.from("charges").insert([
+        { unit_number: unit, month_name: month, amount_due: amount, description: desc, is_paid: false }
+    ]);
 
-            if (error) {
-                alert("خطا در ثبت: " + error.message);
-            } else {
-                alert("صورتحساب جدید با موفقیت ثبت شد.");
-                document.getElementById("new-charge-unit").value = "";
-                document.getElementById("new-charge-month").value = "";
-                document.getElementById("new-charge-amount").value = "";
-                document.getElementById("new-charge-desc").value = "";
-                loadCharges();
-            }
+    if (error) {
+        alert("خطا در ثبت: " + error.message);
+    } else {
+        // پس از ثبت موفق: پاک کردن فرم و نمایش پیام
+        alert("صورتحساب واحد " + unit + " با موفقیت ثبت شد.");
+        
+        document.getElementById("new-charge-unit").value = "";
+        document.getElementById("new-charge-month").value = "";
+        document.getElementById("new-charge-amount").value = "";
+        document.getElementById("new-charge-desc").value = "";
+        
+        // به‌روزرسانی لیست (اگر این تابع را دارید)
+        if (typeof loadCharges === 'function') {
+            loadCharges();
         }
+    }
+}
 
         async function submitReceipt(chargeId) {
             const trackCode = document.getElementById(`track-${chargeId}`).value.trim();
