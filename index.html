@@ -426,35 +426,40 @@
 
     // اجرای تغییر رمز عبور کاربر
     async function changePassword() {
-        const GAPGPTMASKTOKEN6wc1deb6essX1X = document.getElementById("new-password").value;
-        const confirmPassword = document.getElementById("confirm-password").value;
+    const newPassword = document.getElementById("new-password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
 
-        if (!GAPGPTMASKTOKEN6wc1deb6essX2X || !confirmPassword) {
-            alert("لطفاً هر دو قسمت رمز عبور را وارد کنید.");
-            return;
-        }
-
-        if (GAPGPTMASKTOKEN6wc1deb6essX3X.length < 6) {
-            alert("رمز عبور باید حداقل ۶ کاراکتر باشد.");
-            return;
-        }
-
-        if (GAPGPTMASKTOKEN6wc1deb6essX4X !== confirmPassword) {
-            alert("تکرار رمز عبور با رمز جدید یکسان نیست.");
-            return;
-        }
-
-        const { error } = await db.auth.updateUser({
-            password: GAPGPTMASKTOKEN6wc1deb6essX5X
-        });
-
-        if (error) {
-            alert("خطا در تغییر رمز عبور: "GAPGPTMASKTOKEN6wc1deb6essX6X"new-password").value = "";
-        document.getElementById("confirm-password").value = "";
-        togglePasswordBox();
-        alert("رمز عبور با موفقیت تغییر کرد.");
+    if (!newPassword || !confirmPassword) {
+        alert("لطفاً هر دو قسمت رمز عبور را وارد کنید.");
+        return;
     }
 
+    if (newPassword.length < 6) {
+        alert("رمز عبور باید حداقل ۶ کاراکتر باشد.");
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        alert("تکرار رمز عبور با رمز جدید یکسان نیست.");
+        return;
+    }
+
+    const { error } = await db.auth.updateUser({
+        password: newPassword
+    });
+
+    if (error) {
+        alert("خطا در تغییر رمز عبور: " + error.message);
+        return;
+    }
+
+    document.getElementById("new-password").value = "";
+    document.getElementById("confirm-password").value = "";
+    togglePasswordBox();
+    alert("رمز عبور با موفقیت تغییر کرد.");
+}
+
+    
     // ================= بخش ادمین ================= //
 
     async function loadAdminCharges() {
